@@ -3,20 +3,27 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Pages from 'vite-plugin-pages'
 import Icons from 'unplugin-icons/vite'
-import path from 'node:path'
 import WindiCSS from 'vite-plugin-windicss'
+import { resolve } from 'node:path'
+import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  build: {
+    lib: {
+      entry: resolve(__dirname, 'src/lib.ts'),
+      formats: ['es'],
+    },
+  },
   resolve: {
     alias: [
       {
         find: '#types',
-        replacement: path.resolve(__dirname, 'types'),
+        replacement: resolve(__dirname, 'types'),
       },
       {
         find: '#src',
-        replacement: path.resolve(__dirname, 'src'),
+        replacement: resolve(__dirname, 'src'),
       },
     ],
   },
@@ -33,5 +40,8 @@ export default defineConfig({
       dirs: 'src/pages',
     }),
     WindiCSS(),
+    dts({
+      include: ['src/lib.ts', 'src/vite-env.d.ts', 'types/**/*.d.ts', '*.d.ts'],
+    }),
   ],
 })

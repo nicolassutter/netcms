@@ -1,16 +1,10 @@
-import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import { createRouter, createWebHistory } from 'vue-router'
-import routes from '~pages'
-import 'virtual:windi.css'
-import './app.css'
-import App from './App.vue'
+import { init, defineConfig } from './lib'
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes,
+const config = defineConfig({
+  committer: {
+    email: 'netcms@email.com',
+    name: 'netcms',
+  },
 })
 
-const pinia = createPinia()
-
-createApp(App).use(pinia).use(router).mount('#app')
+init(config)

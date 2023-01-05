@@ -1,4 +1,4 @@
-import type { User } from '#types/index'
+import type { User } from 'netlify-identity-widget'
 
 export const useUserStore = defineStore('user', () => {
   const user = ref<null | User>(null)

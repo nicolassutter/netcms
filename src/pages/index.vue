@@ -20,7 +20,7 @@ function openLogin() {
 </script>
 
 <template>
-  <h1 class="capitalize">{{ user?.user_metadata.full_name }}</h1>
+  <h1 class="capitalize">{{ user?.user_metadata?.full_name }}</h1>
 
   <button
     v-if="!isLogged"

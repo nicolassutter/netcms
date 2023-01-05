@@ -1,20 +1,18 @@
 import { useUserStore } from '#src/stores/userStore'
-import type { User } from '#types/index'
 import netlifyIdentity from 'netlify-identity-widget'
 
 export function netlifyInit() {
   const userStore = useUserStore()
 
-  netlifyIdentity.on('init', async (_user: User | null) => {
-    console.log(_user)
+  netlifyIdentity.on('init', async (_user) => {
     userStore.user = _user ?? null
   })
 
-  netlifyIdentity.on('login', async (_user: User) => {
+  netlifyIdentity.on('login', async (_user) => {
     userStore.user = _user
   })
 
-  netlifyIdentity.on('logout', async (_user: User) => {
+  netlifyIdentity.on('logout', async () => {
     userStore.user = null
   })
 

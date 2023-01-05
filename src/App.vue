@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { netlifyInit } from './modules/github'
+// import { config } from './modules/config'
 
 onMounted(() => {
   netlifyInit()
