@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { netlifyInit } from './modules/github'
+
+onMounted(() => {
+  netlifyInit()
+})
 </script>
 
 <template>

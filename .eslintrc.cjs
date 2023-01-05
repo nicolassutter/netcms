@@ -3,7 +3,7 @@ require('@rushstack/eslint-patch/modern-module-resolution')
 /* eslint-env node */
 module.exports = {
   root: true,
-  extends: ['eslint:recommended', 'alsacreations', 'plugin:react/recommended'],
+  extends: ['eslint:recommended', 'alsacreations'],
   rules: {
     'multiline-comment-style': 'off',
     'prefer-template': 'error',
@@ -30,9 +30,6 @@ module.exports = {
     'unicorn/prefer-type-error': 'off',
     'unicorn/error-message': 'off',
     '@typescript-eslint/brace-style': ['error', '1tbs'],
-    'react/react-in-jsx-scope': 'off',
-    'react/jsx-no-undef': 'off',
     'space-before-function-paren': 'off',
-    'react/prop-types': 'off',
   },
 }

@@ -31,7 +31,8 @@
   "include": [
     "src",
     "src/**/*.vue",
-    "./*.d.ts"
+    "./*.d.ts",
+    "types"
   ],
   "references": [
     {

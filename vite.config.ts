@@ -23,16 +23,14 @@ export default defineConfig({
   plugins: [
     vue(),
     Icons({
-      autoInstall: true
+      autoInstall: true,
     }),
     AutoImport({
-      imports: [
-        'vue'
-      ],
+      imports: ['vue', 'pinia'],
       dirs: ['./src/composables'],
     }),
     Pages({
-      dirs: 'src/pages'
+      dirs: 'src/pages',
     }),
     WindiCSS(),
   ],

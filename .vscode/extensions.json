@@ -1,4 +1,10 @@
 {
-  "recommendations": [],
+  "recommendations": [
+    "antfu.vite",
+    "vunguyentuan.vscode-postcss",
+    "dbaeumer.vscode-eslint",
+    "Vue.volar",
+    "lokalise.i18n-ally"
+  ],
   "unwantedRecommendations": []
 }
