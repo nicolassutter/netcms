@@ -33,6 +33,7 @@ specifiers:
   postcss-import: ^15.1.0
   prettier: ^2.8.1
   swiper: ^8.4.5
+  ts-json-schema-generator: ^1.2.0
   type-fest: ^3.4.0
   typescript: ^4.9.4
   unplugin-auto-import: ^0.12.0
@@ -46,6 +47,7 @@ specifiers:
   vue-router: ^4.1.6
   vue-tsc: ^1.0.22
   windicss: ^3.5.6
+  yaml: ^2.2.1
   zod: ^3.20.2
 
 dependencies:
@@ -61,6 +63,7 @@ dependencies:
   uuid: 9.0.0
   vue: 3.2.45
   vue-router: 4.1.6_vue@3.2.45
+  yaml: 2.2.1
   zod: 3.20.2
 
 devDependencies:
@@ -87,6 +90,7 @@ devDependencies:
   postcss: 8.4.20
   postcss-import: 15.1.0_postcss@8.4.20
   prettier: 2.8.1
+  ts-json-schema-generator: 1.2.0
   type-fest: 3.4.0
   typescript: 4.9.4
   unplugin-auto-import: 0.12.0
@@ -10218,6 +10222,20 @@ packages:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
     dev: true
 
+  /ts-json-schema-generator/1.2.0:
+    resolution: {integrity: sha512-tUMeO3ZvA12d3HHh7T/AK8W5hmUhDRNtqWRHSMN3ZRbUFt+UmV0oX8k1RK4SA+a+BKNHpmW2v06MS49e8Fi3Yg==}
+    engines: {node: '>=10.0.0'}
+    hasBin: true
+    dependencies:
+      '@types/json-schema': 7.0.11
+      commander: 9.4.1
+      glob: 8.0.3
+      json5: 2.2.1
+      normalize-path: 3.0.0
+      safe-stable-stringify: 2.4.1
+      typescript: 4.9.4
+    dev: true
+
   /ts-morph/16.0.0:
     resolution: {integrity: sha512-jGNF0GVpFj0orFw55LTsQxVYEUOCWBAbR5Ls7fTYE5pQsbW18ssTb/6UXx/GYAEjS+DQTp8VoTw0vqYMiaaQuw==}
     dependencies:
@@ -10700,7 +10718,7 @@ packages:
       local-pkg: 0.4.2
       picocolors: 1.0.0
       vite: 4.0.4_@types+node@18.11.13
-      yaml: 2.1.3
+      yaml: 2.2.1
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -11054,10 +11072,9 @@ packages:
     engines: {node: '>= 6'}
     dev: true
 
-  /yaml/2.1.3:
-    resolution: {integrity: sha512-AacA8nRULjKMX2DvWvOAdBZMOfQlypSFkjcOcu9FalllIDJ1kvlREzcdIZmidQUqqeMv7jorHjq2HlLv/+c2lg==}
+  /yaml/2.2.1:
+    resolution: {integrity: sha512-e0WHiYql7+9wr4cWMx3TVQrNwejKaEe7/rHNmQmqRjazfOP5W8PB6Jpebb5o6fIapbz9o9+2ipcaTM2ZwDI6lw==}
     engines: {node: '>= 14'}
-    dev: true
 
   /yargs-parser/20.2.9:
     resolution: {integrity: sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==}

@@ -4,3 +4,7 @@ export type Config = {
     name: string
   }
 }
+
+export type ConfigSchema = Config & {
+  $schema?: string
+}

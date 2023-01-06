@@ -1,0 +1,34 @@
+{
+  "$ref": "#/definitions/ConfigSchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "ConfigSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "$schema": {
+          "type": "string"
+        },
+        "committer": {
+          "additionalProperties": false,
+          "properties": {
+            "email": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "email",
+            "name"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "committer"
+      ],
+      "type": "object"
+    }
+  }
+}

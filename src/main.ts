@@ -1,10 +1,3 @@
-import { init, defineConfig } from './lib'
+import { init } from './lib'
 
-const config = defineConfig({
-  committer: {
-    email: 'netcms@email.com',
-    name: 'netcms',
-  },
-})
-
-init(config)
+init()
