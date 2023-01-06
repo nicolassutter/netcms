@@ -10,7 +10,7 @@ export default defineConfig({
       screens: {
         xs: '460px',
         '3xl': '1920px',
-      }
+      },
     },
   },
   plugins: [formsPlugin],

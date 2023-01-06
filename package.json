@@ -18,11 +18,12 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && generate:schemas && vite build",
+    "build": "vue-tsc && pnpm run generate:schemas && vite build",
     "preview": "vite preview",
     "prepare": "husky install",
     "lint:js": "eslint --ext .js,.ts,.tsx,.vue --ignore-path .gitignore .",
-    "generate:schemas": "ts-json-schema-generator --path 'types/index.d.ts' --type 'ConfigSchema' --out 'public/config.schema.json'"
+    "generate:schemas": "ts-json-schema-generator --path 'types/index.d.ts' --type 'ConfigSchema' --out 'public/config.schema.json'",
+    "release": "pnpm run generate:schemas"
   },
   "dependencies": {
     "@types/markdown-it": "^12.2.3",
