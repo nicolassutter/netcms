@@ -1,6 +1,26 @@
-import { useUserStore } from '#src/stores/userStore'
 import { $fetch } from 'ohmyfetch'
 import { config } from './config'
+
+class API {
+  public $fetch
+
+  public constructor(private defaultHeaders?: Record<string, string>) {
+    this.$fetch = $fetch.create({
+      baseURL: `https://elegant-muffin-ddcbaa.netlify.app/.netlify`,
+      headers: this.defaultHeaders ?? {},
+    })
+  }
+}
+
+/**
+ * Used for authenticated requests to Netlify's proxy api
+ */
+const authenticatedApi = new API({
+  get Authorization() {
+    const access_token = localStorage.getItem('netlify_token')
+    return `Bearer ${access_token}`
+  },
+})
 
 /**
  * Creates a file on the repo
@@ -14,24 +34,14 @@ export async function createFile(options: {
   content: string
   message: string
 }) {
-  const { user } = useUserStore()
-
-  if (user?.token) {
-    await $fetch(
-      `https://elegant-muffin-ddcbaa.netlify.app/.netlify/git/github/contents${options.path}`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${user.token.access_token}`,
-        },
-        body: {
-          message: options.message,
-          committer: config.committer,
-          content: btoa(options.content),
-        },
-      },
-    )
-  }
+  await authenticatedApi.$fetch(`/git/github/contents${options.path}`, {
+    method: 'PUT',
+    body: {
+      message: options.message,
+      committer: config.committer,
+      content: btoa(options.content),
+    },
+  })
 }
 
 /**
@@ -47,25 +57,15 @@ export async function updateFile(options: {
   message: string
   sha: string
 }) {
-  const { user } = useUserStore()
-
-  if (user?.token) {
-    await $fetch(
-      `https://elegant-muffin-ddcbaa.netlify.app/.netlify/git/github/contents${options.path}`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${user.token.access_token}`,
-        },
-        body: {
-          message: options.message,
-          committer: config.committer,
-          content: btoa(options.content),
-          sha: options.sha,
-        },
-      },
-    )
-  }
+  await authenticatedApi.$fetch(`/git/github/contents${options.path}`, {
+    method: 'PUT',
+    body: {
+      message: options.message,
+      committer: config.committer,
+      content: btoa(options.content),
+      sha: options.sha,
+    },
+  })
 }
 
 /**
@@ -80,22 +80,12 @@ export async function deleteFile(options: {
   message: string
   sha: string
 }) {
-  const { user } = useUserStore()
-
-  if (user?.token) {
-    await $fetch(
-      `https://elegant-muffin-ddcbaa.netlify.app/.netlify/git/github/contents${options.path}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${user.token.access_token}`,
-        },
-        body: {
-          message: options.message,
-          committer: config.committer,
-          sha: options.sha,
-        },
-      },
-    )
-  }
+  await authenticatedApi.$fetch(`/git/github/contents${options.path}`, {
+    method: 'DELETE',
+    body: {
+      message: options.message,
+      committer: config.committer,
+      sha: options.sha,
+    },
+  })
 }
