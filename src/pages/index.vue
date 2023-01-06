@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import SideBar from '#src/components/SideBar.vue'
 import { listContent } from '#src/modules/api'
 import { useUserStore } from '#src/stores/userStore'
-import { netlifyIdentity } from '../modules/auth'
+import { netlifyIdentity } from '#src/modules/auth'
+import { config } from '#src/modules/config'
 
 defineComponent({
   name: 'IndexPage',
@@ -19,9 +21,14 @@ function openLogin() {
   netlifyIdentity.open()
 }
 
-async function list() {
-  console.log(await listContent('post'))
-}
+const defaultContentType = config.content_types?.at(0)
+
+onMounted(async () => {
+  if (defaultContentType) {
+    const files = await listContent(defaultContentType?.name)
+    console.log(files)
+  }
+})
 </script>
 
 <template>
@@ -41,5 +48,5 @@ async function list() {
     Log out
   </button>
 
-  <button v-on:click="list">List</button>
+  <SideBar></SideBar>
 </template>

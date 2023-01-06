@@ -1,4 +1,5 @@
 import { appendSlash, call } from '#src/utils/utils'
+import type { File } from '#types/index'
 import { $fetch } from 'ohmyfetch'
 import { config, extensions } from './config'
 
@@ -104,7 +105,7 @@ export async function listContent(contentType: string) {
   const files = await call(async () => {
     try {
       return (
-        (await authenticatedApi.$fetch(
+        (await authenticatedApi.$fetch<File[]>(
           `/git/github/contents${appendSlash(content_dir)}`,
           {
             method: 'GET',

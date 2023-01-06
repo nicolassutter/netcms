@@ -33,7 +33,7 @@ export default defineConfig({
       autoInstall: true,
     }),
     AutoImport({
-      imports: ['vue', 'pinia'],
+      imports: ['vue', 'pinia', 'vue-router'],
       dirs: ['./src/composables'],
     }),
     Pages({
