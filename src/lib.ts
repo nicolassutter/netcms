@@ -23,7 +23,7 @@ export async function init() {
       ([key, value]) => (pluginConfig[key] = value as any),
     )
   } catch (error) {
-    throw new Error('yaml is incorrect in config file')
+    throw new Error('config file is incorrect')
   }
 
   createApp(App).use(pinia).use(router).mount('#app')
