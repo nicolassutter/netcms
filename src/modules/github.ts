@@ -10,10 +10,13 @@ export function netlifyInit() {
 
   netlifyIdentity.on('login', async (_user) => {
     userStore.user = _user
+    _user.token?.access_token &&
+      localStorage.setItem('netlify_token', _user.token.access_token)
   })
 
   netlifyIdentity.on('logout', async () => {
     userStore.user = null
+    localStorage.removeItem('netlify_token')
   })
 
   netlifyIdentity.init({
