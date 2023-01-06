@@ -1,6 +1,6 @@
-import { appendSlash } from '#src/utils/utils'
+import { appendSlash, call } from '#src/utils/utils'
 import { $fetch } from 'ohmyfetch'
-import { config } from './config'
+import { config, extensions } from './config'
 
 class API {
   public $fetch
@@ -92,19 +92,31 @@ export async function deleteFile(options: {
 }
 
 /**
- * Gets all the available content types from the repo
+ * Gets all the available content for the given contentType
  */
-export async function listContentTypes() {
-  const content_dir = config.content_dir
+export async function listContent(contentType: string) {
+  const content_dir = `${config.content_dir}/${contentType}`
 
-  if (!content_dir) {
-    return
+  if (!config.content_types?.find((type) => type.name === contentType)) {
+    throw new Error('content type does not exist in the config')
   }
 
-  await authenticatedApi.$fetch(
-    `/git/github/contents${appendSlash(content_dir)}`,
-    {
-      method: 'GET',
-    },
-  )
+  const files = await call(async () => {
+    try {
+      return (
+        (await authenticatedApi.$fetch(
+          `/git/github/contents${appendSlash(content_dir)}`,
+          {
+            method: 'GET',
+          },
+        )) ?? []
+      )
+    } catch (error) {
+      throw new Error('content type directory does not exist')
+    }
+  })
+
+  return files.filter((file) => {
+    return !!extensions.find((ext) => file.path.endsWith(`.${ext}`))
+  })
 }

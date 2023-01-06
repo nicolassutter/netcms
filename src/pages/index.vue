@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { listContentTypes } from '#src/modules/api'
+import { listContent } from '#src/modules/api'
 import { useUserStore } from '#src/stores/userStore'
 import { netlifyIdentity } from '../modules/auth'
 
@@ -17,6 +17,10 @@ function logout() {
 
 function openLogin() {
   netlifyIdentity.open()
+}
+
+async function list() {
+  console.log(await listContent('post'))
 }
 </script>
 
@@ -37,5 +41,5 @@ function openLogin() {
     Log out
   </button>
 
-  <button v-on:click="listContentTypes">List</button>
+  <button v-on:click="list">List</button>
 </template>

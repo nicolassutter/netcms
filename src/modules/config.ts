@@ -1,9 +1,11 @@
-import type { Config } from '#types/index'
+import type { Config, Format } from '#types/index'
 import { parse } from 'yaml'
 import { $fetch } from 'ohmyfetch'
 import { call, remoteExists } from '#src/utils/utils'
 
 export const config: Partial<Config> = {}
+
+export const extensions: Format[] = ['json', 'md', 'yml']
 
 /**
  * Loads the config form the config file,
