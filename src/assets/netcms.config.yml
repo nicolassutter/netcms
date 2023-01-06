@@ -1,3 +1,21 @@
 committer:
   email: "netcms@email.com"
   name: "netcms"
+
+assets_dir: "data/assets"
+
+content_dir: "data/content"
+
+content_types:
+  - name: post
+    format: yml
+    fields:
+      - name: title
+        type: text
+        label: Title
+        params: {}
+
+      - name: body
+        type: rich
+        label: Post body
+        params: {}

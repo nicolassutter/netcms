@@ -8,6 +8,10 @@ export function entries<T extends Record<any, unknown>>(obj: T) {
   return Object.entries(obj) as [keyof T, unknown][]
 }
 
+export function appendSlash(str: string) {
+  return str.startsWith('/') ? str : `/${str}`
+}
+
 /**
  * Makes a Head request to know if a remote path exists or not
  */

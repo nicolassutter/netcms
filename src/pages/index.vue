@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { listContentTypes } from '#src/modules/api'
 import { useUserStore } from '#src/stores/userStore'
 import { netlifyIdentity } from '../modules/auth'
 
@@ -35,4 +36,6 @@ function openLogin() {
   >
     Log out
   </button>
+
+  <button v-on:click="listContentTypes">List</button>
 </template>

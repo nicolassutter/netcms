@@ -1,3 +1,4 @@
+import { appendSlash } from '#src/utils/utils'
 import { $fetch } from 'ohmyfetch'
 import { config } from './config'
 
@@ -88,4 +89,22 @@ export async function deleteFile(options: {
       sha: options.sha,
     },
   })
+}
+
+/**
+ * Gets all the available content types from the repo
+ */
+export async function listContentTypes() {
+  const content_dir = config.content_dir
+
+  if (!content_dir) {
+    return
+  }
+
+  await authenticatedApi.$fetch(
+    `/git/github/contents${appendSlash(content_dir)}`,
+    {
+      method: 'GET',
+    },
+  )
 }
