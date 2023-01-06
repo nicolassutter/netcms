@@ -19,6 +19,8 @@ export function netlifyInit() {
     localStorage.removeItem('netlify_token')
   })
 
+  netlifyIdentity.on('error', (err) => console.error('Netlify Error', err))
+
   netlifyIdentity.init({
     locale: 'en', // defaults to 'en'
   })
