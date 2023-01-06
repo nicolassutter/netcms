@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '#src/stores/userStore'
-import { netlifyIdentity } from './../modules/github'
+import { netlifyIdentity } from '../modules/auth'
 
 defineComponent({
   name: 'IndexPage',
