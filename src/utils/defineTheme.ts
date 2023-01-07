@@ -1,5 +1,5 @@
-import type { Theme } from 'windicss/types/interfaces'
+import { type Config } from 'tailwindcss'
 
-export function defineTheme(theme: Theme) {
+export function defineTheme<T extends Config['theme']>(theme: T) {
   return theme
 }

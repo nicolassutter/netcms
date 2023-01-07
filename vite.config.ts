@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 import AutoImport from 'unplugin-auto-import/vite'
 import Pages from 'vite-plugin-pages'
 import Icons from 'unplugin-icons/vite'
-import WindiCSS from 'vite-plugin-windicss'
 import { resolve } from 'node:path'
 import dts from 'vite-plugin-dts'
 
@@ -39,7 +38,6 @@ export default defineConfig({
     Pages({
       dirs: 'src/pages',
     }),
-    WindiCSS(),
     dts({
       include: ['src/lib.ts', 'src/vite-env.d.ts', 'types/**/*.d.ts', '*.d.ts'],
     }),

@@ -34,10 +34,12 @@ specifiers:
   npm-run-all: ^4.1.5
   ohmyfetch: ^0.4.21
   pinia: ^2.0.28
-  postcss: ^8.4.19
+  postcss: ^8.4.20
   postcss-import: ^15.1.0
+  postcss-nesting: ^10.2.0
   prettier: ^2.8.1
   swiper: ^8.4.5
+  tailwindcss: ^3.2.4
   ts-json-schema-generator: ^1.2.0
   type-fest: ^3.4.0
   typescript: ^4.9.4
@@ -47,11 +49,9 @@ specifiers:
   vite: ^4.0.4
   vite-plugin-dts: ^1.7.1
   vite-plugin-pages: ^0.27.1
-  vite-plugin-windicss: ^1.8.10
   vue: ^3.2.45
   vue-router: ^4.1.6
   vue-tsc: ^1.0.22
-  windicss: ^3.5.6
   yaml: ^2.2.1
   zod: ^3.20.2
 
@@ -99,7 +99,9 @@ devDependencies:
   npm-run-all: 4.1.5
   postcss: 8.4.20
   postcss-import: 15.1.0_postcss@8.4.20
+  postcss-nesting: 10.2.0_postcss@8.4.20
   prettier: 2.8.1
+  tailwindcss: 3.2.4_ra2vnoek4vhbzktaezawwqbin4
   ts-json-schema-generator: 1.2.0
   type-fest: 3.4.0
   typescript: 4.9.4
@@ -108,9 +110,7 @@ devDependencies:
   vite: 4.0.4_@types+node@18.11.13
   vite-plugin-dts: 1.7.1_vite@4.0.4
   vite-plugin-pages: 0.27.1_vite@4.0.4
-  vite-plugin-windicss: 1.8.10_vite@4.0.4
   vue-tsc: 1.0.22_typescript@4.9.4
-  windicss: 3.5.6
 
 packages:
 
@@ -558,6 +558,17 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
+    dev: true
+
+  /@csstools/selector-specificity/2.0.2_2xshye3abirqjlplmebvmaxyna:
+    resolution: {integrity: sha512-IkpVW/ehM1hWKln4fCA3NzJU8KwD+kIOvPZA4cqxoJHtE21CCzjyp+Kxbu0i5I4tBNOlXPL9mjwnWlL0VEG4Fg==}
+    engines: {node: ^12 || ^14 || >=16}
+    peerDependencies:
+      postcss: ^8.2
+      postcss-selector-parser: ^6.0.10
+    dependencies:
+      postcss: 8.4.20
+      postcss-selector-parser: 6.0.11
     dev: true
 
   /@dabh/diagnostics/2.0.3:
@@ -2606,30 +2617,6 @@ packages:
 
   /@vue/shared/3.2.45:
     resolution: {integrity: sha512-Ewzq5Yhimg7pSztDV+RH1UDKBzmtqieXQlpTVm2AwraoRL/Rks96mvd8Vgi7Lj+h+TH8dv7mXD3FRZR3TUvbSg==}
-
-  /@windicss/config/1.8.10:
-    resolution: {integrity: sha512-O9SsC110b1Ik3YYa4Ck/0TWuCo7YFfA9KDrwD5sAeqscT5COIGK1HszdCT3oh0MJFej2wNrvpfyW9h6yQaW6PA==}
-    dependencies:
-      debug: 4.3.4
-      jiti: 1.16.1
-      windicss: 3.5.6
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /@windicss/plugin-utils/1.8.10:
-    resolution: {integrity: sha512-Phqk5OW1w+Mv+ry6t7BzAeDq3aMhbI94gR49j9vQCufFfDGCHndhhjtMK0sBv+NPJUsIAIh6qayb1iwBCXUGrw==}
-    dependencies:
-      '@antfu/utils': 0.7.2
-      '@windicss/config': 1.8.10
-      debug: 4.3.4
-      fast-glob: 3.2.12
-      magic-string: 0.27.0
-      micromatch: 4.0.5
-      windicss: 3.5.6
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
 
   /JSONStream/1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
@@ -7564,13 +7551,6 @@ packages:
       sourcemap-codec: 1.4.8
     dev: true
 
-  /magic-string/0.27.0:
-    resolution: {integrity: sha512-8UnnX2PeRAPZuN12svgR9j7M1uWMovg/CEnIwIG0LFkXSJJe4PdfUGiTGl8V9bsBHFUtfVINcSyYxd7q+kx9fA==}
-    engines: {node: '>=12'}
-    dependencies:
-      '@jridgewell/sourcemap-codec': 1.4.14
-    dev: true
-
   /make-dir/1.3.0:
     resolution: {integrity: sha512-2w31R7SJtieJJnQtGc7RVL2StM2vGYVfqUOvUDxH6bC6aJTxPxTF0GnIgCyu7tjockiUWAYQRbxa7vKn34s5sQ==}
     engines: {node: '>=4'}
@@ -9088,6 +9068,17 @@ packages:
     peerDependencies:
       postcss: ^8.2.14
     dependencies:
+      postcss: 8.4.20
+      postcss-selector-parser: 6.0.11
+    dev: true
+
+  /postcss-nesting/10.2.0_postcss@8.4.20:
+    resolution: {integrity: sha512-EwMkYchxiDiKUhlJGzWsD9b2zvq/r2SSubcRrgP+jujMXFzqvANLt16lJANC+5uZ6hjI7lpRmI6O8JIl+8l1KA==}
+    engines: {node: ^12 || ^14 || >=16}
+    peerDependencies:
+      postcss: ^8.2
+    dependencies:
+      '@csstools/selector-specificity': 2.0.2_2xshye3abirqjlplmebvmaxyna
       postcss: 8.4.20
       postcss-selector-parser: 6.0.11
     dev: true
@@ -11189,20 +11180,6 @@ packages:
       - supports-color
     dev: true
 
-  /vite-plugin-windicss/1.8.10_vite@4.0.4:
-    resolution: {integrity: sha512-scywsuzo46lcTBohspmF0WiwhWEte6p+OUVrX4yr7VMRvLHMHVfLtJReyD5pppjijG7YOwVsZn7XBWWZtF658Q==}
-    peerDependencies:
-      vite: ^2.0.1 || ^3.0.0 || ^4.0.0
-    dependencies:
-      '@windicss/plugin-utils': 1.8.10
-      debug: 4.3.4
-      kolorist: 1.6.0
-      vite: 4.0.4_@types+node@18.11.13
-      windicss: 3.5.6
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
   /vite/4.0.4_@types+node@18.11.13:
     resolution: {integrity: sha512-xevPU7M8FU0i/80DMR+YhgrzR5KS2ORy1B4xcX/cXLsvnUWvfHuqMmVU6N0YiJ4JWGRJJsLCgjEzKjG9/GKoSw==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -11418,12 +11395,6 @@ packages:
     engines: {node: '>=12'}
     dependencies:
       string-width: 5.1.2
-    dev: true
-
-  /windicss/3.5.6:
-    resolution: {integrity: sha512-P1mzPEjgFMZLX0ZqfFht4fhV/FX8DTG7ERG1fBLiWvd34pTLVReS5CVsewKn9PApSgXnVfPWwvq+qUsRwpnwFA==}
-    engines: {node: '>= 12'}
-    hasBin: true
     dev: true
 
   /windows-release/5.0.1:
