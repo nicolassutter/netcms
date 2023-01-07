@@ -1,5 +1,6 @@
 import { defineConfig } from 'windicss/helpers'
-import formsPlugin from 'windicss/plugin/forms'
+import typographyPlugin from 'windicss/plugin/typography'
+import { theme } from './src/themes/catppuccin-macchiato'
 
 export default defineConfig({
   darkMode: 'class',
@@ -11,7 +12,10 @@ export default defineConfig({
         xs: '460px',
         '3xl': '1920px',
       },
+      colors: {
+        ...theme.colors,
+      },
     },
   },
-  plugins: [formsPlugin],
+  plugins: [typographyPlugin()],
 })
