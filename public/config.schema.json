@@ -59,12 +59,17 @@
           "items": {
             "$ref": "#/definitions/AnyField"
           }
+        },
+        "title_field": {
+          "type": "string",
+          "description": "The `name` of the field that will be used as a single entity's title\n\nFor a \"post\" content type, a post has a `title` field (the title of the post). We could therefore set `title_field: title`, that way each post will use the `title` field as their identifier"
         }
       },
       "required": [
         "name",
         "format",
-        "fields"
+        "fields",
+        "title_field"
       ],
       "additionalProperties": false
     },

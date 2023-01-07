@@ -1,0 +1,8 @@
+{
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "yaml.schemas": {
+    "public/config.schema.json": "netcms.config.yml"
+  }
+}
