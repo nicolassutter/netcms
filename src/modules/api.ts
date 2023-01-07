@@ -1,6 +1,7 @@
 import { appendSlash, call } from '#src/utils/utils'
-import type { File } from '#types/index'
+import type { File, SingleFile } from '#types/index'
 import { $fetch } from 'ohmyfetch'
+import { netlifyIdentity } from './auth'
 import { config, extensions } from './config'
 
 class API {
@@ -59,15 +60,18 @@ export async function updateFile(options: {
   message: string
   sha: string
 }) {
-  await authenticatedApi.$fetch(`/git/github/contents${options.path}`, {
-    method: 'PUT',
-    body: {
-      message: options.message,
-      committer: config.committer,
-      content: btoa(options.content),
-      sha: options.sha,
+  await authenticatedApi.$fetch(
+    `/git/github/contents${appendSlash(options.path)}`,
+    {
+      method: 'PUT',
+      body: {
+        message: options.message,
+        committer: config.committer,
+        content: btoa(options.content),
+        sha: options.sha,
+      },
     },
-  })
+  )
 }
 
 /**
@@ -82,14 +86,29 @@ export async function deleteFile(options: {
   message: string
   sha: string
 }) {
-  await authenticatedApi.$fetch(`/git/github/contents${options.path}`, {
-    method: 'DELETE',
-    body: {
-      message: options.message,
-      committer: config.committer,
-      sha: options.sha,
+  await authenticatedApi.$fetch(
+    `/git/github/contents${appendSlash(options.path)}`,
+    {
+      method: 'DELETE',
+      body: {
+        message: options.message,
+        committer: config.committer,
+        sha: options.sha,
+      },
     },
-  })
+  )
+}
+
+/**
+ * Get the content of the file at the given path
+ */
+export async function readFile(path: string) {
+  return await authenticatedApi.$fetch<SingleFile>(
+    `/git/github/contents${appendSlash(path)}`,
+    {
+      method: 'GET',
+    },
+  )
 }
 
 /**
@@ -113,6 +132,7 @@ export async function listContent(contentType: string) {
         )) ?? []
       )
     } catch (error) {
+      netlifyIdentity.logout()
       throw new Error('content type directory does not exist')
     }
   })

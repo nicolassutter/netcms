@@ -7,12 +7,16 @@ defineComponent({
 </script>
 
 <template>
-  <ul>
+  <ul class="bg-neutral">
     <li
       v-for="contentType in config.content_types ?? []"
       :key="`content-type-${contentType.name}`"
     >
-      <span class="capitalize">{{ contentType.name }}</span>
+      <router-link
+        :to="`/content-type/${contentType.name}`"
+        class="capitalize"
+        >{{ contentType.name }}</router-link
+      >
     </li>
   </ul>
 </template>

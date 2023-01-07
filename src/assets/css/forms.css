@@ -1,0 +1,27 @@
+label {
+  @apply block font-semibold;
+}
+
+input, textarea {
+  @apply rounded-sm p-2 bg-base-100;
+  @apply block w-full appearance-none;
+  @apply mt-2;
+
+  @apply transition-all;
+
+  @apply focus:(ring-2 ring-accent-focus outline-none);
+}
+
+.form {
+  label:not(:first-child) {
+    @apply mt-5;
+  }
+}
+
+.btn {
+  @apply rounded-sm p-2 capitalize transition-colors;
+
+  &:disabled {
+    @apply filter cursor-not-allowed brightness-50;
+  }
+}

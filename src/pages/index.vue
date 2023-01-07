@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import SideBar from '#src/components/SideBar.vue'
 import { listContent } from '#src/modules/api'
 import { useUserStore } from '#src/stores/userStore'
 import { netlifyIdentity } from '#src/modules/auth'
@@ -32,21 +31,21 @@ onMounted(async () => {
 </script>
 
 <template>
-  <h1 class="capitalize">{{ user?.user_metadata?.full_name }}</h1>
+  <div class="index-page">
+    <h1 class="capitalize">{{ user?.user_metadata?.full_name }}</h1>
 
-  <button
-    v-if="!isLogged"
-    v-on:click="openLogin"
-  >
-    Open Login
-  </button>
+    <button
+      v-if="!isLogged"
+      v-on:click="openLogin"
+    >
+      Open Login
+    </button>
 
-  <button
-    v-if="isLogged"
-    v-on:click="logout"
-  >
-    Log out
-  </button>
-
-  <SideBar></SideBar>
+    <button
+      v-if="isLogged"
+      v-on:click="logout"
+    >
+      Log out
+    </button>
+  </div>
 </template>

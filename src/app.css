@@ -1,3 +1,14 @@
+@import './assets/css/forms.css';
+
 :root {
-  /* --test: theme(''); */
+  @apply text-base-content;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+#app {
+  height: 100%;
 }
