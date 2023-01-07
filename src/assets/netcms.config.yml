@@ -9,6 +9,7 @@ content_dir: "data/content"
 content_types:
   - name: post
     format: yml
+    title_field: title
     fields:
       - name: title
         type: text
