@@ -7,7 +7,7 @@ import App from './App.vue'
 import { config as pluginConfig, loadConfigFile } from './modules/config'
 import { entries } from './utils/utils'
 
-const router = createRouter({
+export const router = createRouter({
   history: createWebHistory(),
   routes,
 })

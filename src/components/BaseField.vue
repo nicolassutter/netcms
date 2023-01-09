@@ -32,13 +32,13 @@ const model = computed({
   />
 
   <input
-    v-if="type === 'email'"
+    v-else-if="type === 'email'"
     v-model="model"
     type="email"
   />
 
   <textarea
-    v-if="type === 'rich'"
+    v-else-if="type === 'rich'"
     v-model="model"
   ></textarea>
 </template>

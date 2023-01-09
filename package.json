@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "@types/markdown-it": "^12.2.3",
+    "@vueuse/core": "^9.10.0",
     "date-fns": "^2.29.3",
     "lodash-es": "^4.17.21",
     "markdown-it": "^13.0.1",

@@ -6,13 +6,22 @@ import { netlifyInit } from './modules/auth'
 onMounted(() => {
   netlifyInit()
 })
+
+const { header } = useHeader()
 </script>
 
 <template>
-  <div class="grid grid-cols-[1fr_5fr] min-h-full bg-base">
-    <SideBar></SideBar>
+  <div
+    class="grid grid-rows-[theme(spacing.16),auto] grid-cols-[minmax(100px,250px)_5fr] min-h-full bg-base"
+  >
+    <header
+      ref="header"
+      class="col-span-full bg-neutral border-b border-base-100 px-2"
+    ></header>
 
-    <div class="p-5">
+    <SideBar class="col-start-1 row-start-2"></SideBar>
+
+    <div class="app-content-grid col-start-2 row-start-2">
       <router-view></router-view>
     </div>
   </div>

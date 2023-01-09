@@ -53,7 +53,9 @@ function initEmptyFields() {
       return
     }
 
-    if (!writableContent.value[field.name]) {
+    // If the field does not exist yet
+    // TODO: Do we only allow strings ? Or more options, for example, in a select field.
+    if (!(field.name in writableContent.value)) {
       writableContent.value[field.name] = ''
     }
   })
@@ -125,42 +127,54 @@ onMounted(async () => {
 
   initEmptyFields()
 })
+
+const { header } = useHeader()
 </script>
 
 <template>
   <div
     v-if="content && writableContent"
-    class="content-type-page"
+    class="file-page col-span-full"
   >
-    <header>
-      <button
-        class="btn bg-primary hover:not-disabled:bg-primary-focus"
-        :disabled="!contentHasChanged"
-        v-on:click="publish"
-      >
-        Publish
-      </button>
-    </header>
+    <Teleport
+      v-if="header"
+      :to="header"
+    >
+      <ul class="flex items-center h-full">
+        <li class="ml-auto">
+          <button
+            class="btn bg-primary hover:not-disabled:bg-primary-focus"
+            :disabled="!contentHasChanged"
+            v-on:click="publish"
+          >
+            Publish
+          </button>
+        </li>
+      </ul>
+    </Teleport>
 
-    <h1 class="capitalize font-bold text-3xl">{{ fileTitle }}</h1>
+    <div class="app-content-grid pt-5">
+      <h1 class="capitalize font-bold text-3xl">{{ fileTitle }}</h1>
 
-    <div class="form max-w-xl mt-10">
-      <template
-        v-for="field in contentType?.fields"
-        :key="`field-${contentType.name}-${field.name}`"
-      >
-        <label
-          for=""
-          class="capitalize"
-          >{{ field.label ?? field.name }}</label
+      <div class="form max-w-xl mt-10">
+        <template
+          v-for="field in contentType?.fields"
+          :key="`field-${contentType.name}-${field.name}`"
         >
+          <label
+            :for="`field-${field.name}`"
+            class="capitalize"
+            >{{ field.label ?? field.name }}</label
+          >
 
-        <BaseField
-          v-model="writableContent[field.name]"
-          :type="field.type"
-          :name="field.name"
-        ></BaseField>
-      </template>
+          <BaseField
+            :id="`field-${field.name}`"
+            v-model="writableContent[field.name]"
+            :type="field.type"
+            :name="field.name"
+          ></BaseField>
+        </template>
+      </div>
     </div>
   </div>
 </template>
