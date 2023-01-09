@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": [
@@ -29,9 +30,9 @@
     }
   },
   "include": [
-    "src/**/*",
+    "./src/**/*",
     "./*.d.ts",
-    "types"
+    "./types"
   ],
   "references": [
     {
