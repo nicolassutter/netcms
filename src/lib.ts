@@ -6,10 +6,20 @@ import './app.css'
 import App from './App.vue'
 import { config as pluginConfig, loadConfigFile } from './modules/config'
 import { entries } from './utils/utils'
+import { useUserStore } from './stores/userStore'
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to, _from) => {
+  const userStore = useUserStore()
+  const toRequireAuth = [true, undefined].includes(to.meta.requireAuth as any)
+
+  if (!userStore.isLogged && toRequireAuth) {
+    router.push('/auth')
+  }
 })
 
 const pinia = createPinia()

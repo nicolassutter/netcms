@@ -140,7 +140,7 @@ const { header } = useHeader()
       v-if="header"
       :to="header"
     >
-      <ul class="flex items-center h-full">
+      <ul class="flex items-center h-full ml-auto">
         <li class="ml-auto">
           <button
             class="btn bg-primary hover:not-disabled:bg-primary-focus"

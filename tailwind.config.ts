@@ -9,9 +9,12 @@ export default {
         xs: '460px',
         '3xl': '1920px',
       },
-      colors: {
-        ...theme.colors,
-      },
+      minHeight: ({ theme }) => ({
+        ...theme('spacing'),
+      }),
+    },
+    colors: {
+      ...theme.colors,
     },
   },
   plugins: [],

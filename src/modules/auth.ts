@@ -1,5 +1,6 @@
 import { useUserStore } from '#src/stores/userStore'
 import netlifyIdentity from 'netlify-identity-widget'
+import { router } from '#src/lib'
 
 export function netlifyInit() {
   const userStore = useUserStore()
@@ -12,6 +13,10 @@ export function netlifyInit() {
     userStore.user = _user
     _user.token?.access_token &&
       localStorage.setItem('netlify_token', _user.token.access_token)
+
+    if (router.currentRoute.value.path === '/auth') {
+      router.push('/')
+    }
   })
 
   netlifyIdentity.on('logout', async () => {
