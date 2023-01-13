@@ -5,6 +5,8 @@ import Pages from 'vite-plugin-pages'
 import Icons from 'unplugin-icons/vite'
 import { resolve } from 'node:path'
 import dts from 'vite-plugin-dts'
+import vitePluginTailwindCSS from 'vite-plugin-tw'
+import postcssImport from 'postcss-import'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -26,6 +28,11 @@ export default defineConfig({
       },
     ],
   },
+  css: {
+    postcss: {
+      plugins: [postcssImport()],
+    },
+  },
   plugins: [
     vue(),
     Icons({
@@ -40,6 +47,9 @@ export default defineConfig({
     }),
     dts({
       include: ['src/lib.ts', 'src/vite-env.d.ts', 'types/**/*.d.ts', '*.d.ts'],
+    }),
+    vitePluginTailwindCSS({
+      nesting: 'postcss-nesting',
     }),
   ],
 })

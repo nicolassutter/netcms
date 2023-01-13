@@ -24,3 +24,5 @@ dist-ssr
 .netlify
 
 .env
+
+.vite_plugin_tailwindcss
