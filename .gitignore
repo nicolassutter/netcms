@@ -25,4 +25,4 @@ dist-ssr
 
 .env
 
-.vite_plugin_tailwindcss
+.vite-plugin-tw
