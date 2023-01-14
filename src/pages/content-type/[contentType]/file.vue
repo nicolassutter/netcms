@@ -7,6 +7,7 @@ import type { SingleFile, ContentType } from '#types/index'
 import { isEqual } from 'lodash-es'
 import type { JsonObject } from 'type-fest'
 import { parse, stringify } from 'yaml'
+import { parse as parsePath } from 'path-browserify'
 
 defineComponent({
   name: 'IndexPage',
@@ -62,7 +63,7 @@ function initEmptyFields() {
 }
 
 async function publish() {
-  const ext = file.value?.path.split('/').at(-1)?.split('.').at(-1)
+  const ext = parsePath(file.value?.path ?? '').ext
 
   let newContent = JSON.stringify(writableContent.value)
 
