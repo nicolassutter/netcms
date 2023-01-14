@@ -1,6 +1,3 @@
-#
-# *** Configuration par défaut pour les projets Alsacréations ***
-#
 root = true
 
 [*]
