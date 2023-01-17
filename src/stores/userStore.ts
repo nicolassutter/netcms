@@ -1,3 +1,5 @@
+// force tsc to load pinia types
+import type {} from 'pinia'
 import type { User } from 'netlify-identity-widget'
 
 export const useUserStore = defineStore('user', () => {
