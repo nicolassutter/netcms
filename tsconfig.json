@@ -27,7 +27,12 @@
       "#types/*": [
         "./types/*"
       ]
-    }
+    },
+    "types": [
+      "vite/client",
+      "vite-plugin-pages/client",
+      "unplugin-icons/types/vue"
+    ]
   },
   "include": [
     "./src/**/*",

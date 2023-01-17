@@ -46,7 +46,7 @@ export default defineConfig({
       dirs: 'src/pages',
     }),
     dts({
-      include: ['src/lib.ts', 'src/vite-env.d.ts', 'types/**/*.d.ts', '*.d.ts'],
+      include: ['src/lib.ts', 'types/**/*.d.ts', '*.d.ts'],
     }),
     vitePluginTailwindCSS({
       nesting: 'postcss-nesting',
