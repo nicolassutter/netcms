@@ -31,5 +31,3 @@ export async function remoteExists(url: string) {
     return exists
   }
 }
-
-export * from './md'
