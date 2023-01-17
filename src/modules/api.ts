@@ -1,9 +1,7 @@
 import { appendSlash, call } from '#src/utils/utils'
 import type { File, SingleFile } from '#types/index'
 import { $fetch } from 'ohmyfetch'
-import { netlifyIdentity } from './auth'
 import { config, extensions } from './config'
-import { router } from '#src/lib'
 
 class API {
   public $fetch
@@ -133,8 +131,6 @@ export async function listContent(contentType: string) {
         )) ?? []
       )
     } catch (error) {
-      netlifyIdentity.logout()
-      router.push('/')
       // TODO: display a toast
       throw new Error('content type directory does not exist')
     }
