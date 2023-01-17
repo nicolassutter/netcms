@@ -48,3 +48,12 @@ content_types:
 
             - label: Svelte
               value: svelte
+
+  - name: thing
+    title_field: thing1
+    format: md
+    fields:
+      - name: thing1
+        label: The thing
+        type: text
+        params: {}
