@@ -19,13 +19,13 @@
   "scripts": {
     "dev": "npm-run-all --parallel dev:vite dev:generate:schemas",
     "dev:vite": "vite",
-    "build": "vue-tsc && cross-env NODE_ENV='production' pnpm run generate:schemas && vite build",
+    "build": "vue-tsc && cross-env NODE_ENV='production' nr generate:schemas && vite build",
     "preview": "vite preview",
     "prepare": "husky install",
     "lint:js": "eslint --ext .js,.ts,.tsx,.vue --ignore-path .gitignore .",
     "generate:schemas": "jiti scripts/schema.ts",
     "dev:generate:schemas": "cross-env NODE_ENV='development' jiti scripts/schema.ts",
-    "release": "pnpm run generate:schemas"
+    "release": "nr generate:schemas"
   },
   "dependencies": {
     "@types/markdown-it": "^12.2.3",
@@ -46,6 +46,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@antfu/ni": "^0.18.8",
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
     "@iconify-json/carbon": "^1.1.13",

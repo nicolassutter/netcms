@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@antfu/ni': ^0.18.8
   '@commitlint/cli': ^17.4.2
   '@commitlint/config-conventional': ^17.4.2
   '@iconify-json/carbon': ^1.1.13
@@ -81,6 +82,7 @@ dependencies:
   zod: 3.20.2
 
 devDependencies:
+  '@antfu/ni': 0.18.8
   '@commitlint/cli': 17.4.2
   '@commitlint/config-conventional': 17.4.2
   '@iconify-json/carbon': 1.1.13
@@ -141,6 +143,11 @@ packages:
     dependencies:
       execa: 5.1.1
       find-up: 5.0.0
+    dev: true
+
+  /@antfu/ni/0.18.8:
+    resolution: {integrity: sha512-0m++AudwQq+wWAz/Ax7g+sh/wFW51HHQ6BtPLsuTAsFIzWB/bv/0COwZE7BRS+u0nqMb6Ks6nlk6cY1TpPDwHg==}
+    hasBin: true
     dev: true
 
   /@antfu/utils/0.7.2:
