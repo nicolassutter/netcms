@@ -10,7 +10,8 @@ defineComponent({
 
 const router = useRouter()
 const route = useRoute()
-const contentTypeName = route.params.contentType
+const contentTypeName = computed(() => route.params.contentType)
+const isLoading = ref(false)
 
 const files = ref<File[]>()
 
@@ -25,32 +26,56 @@ function getFileTitle(item: File) {
   return `${parsedName.name}`
 }
 
-onMounted(async () => {
-  if (typeof contentTypeName !== 'string') {
+async function init() {
+  if (typeof contentTypeName.value !== 'string') {
     router.push('/')
     return
   }
 
-  const contentFiles = await listContent(contentTypeName)
-  files.value = contentFiles
+  try {
+    isLoading.value = true
+    const contentFiles = await listContent(contentTypeName.value)
+    files.value = contentFiles
+  } catch (error) {
+    files.value = []
+  } finally {
+    isLoading.value = false
+  }
+}
+
+onMounted(async () => {
+  init()
+})
+
+watch(contentTypeName, () => {
+  init()
 })
 </script>
 
 <template>
-  <div class="content-type-page">
-    <h1 class="capitalize">{{ contentTypeName }}</h1>
+  <div class="content-type-page mt-5">
+    <p
+      v-if="isLoading"
+      class=""
+    >
+      Loading...
+    </p>
 
-    <ul>
-      <li
-        v-for="file in files ?? []"
-        :key="`content-file-${file.sha}`"
-      >
-        <router-link
-          :to="`/content-type/${contentTypeName}/file?path=${file.path}`"
-          class="capitalize"
-          >{{ getFileTitle(file) }}</router-link
+    <template v-else>
+      <h1 class="capitalize font-bold text-3xl">{{ contentTypeName }}</h1>
+
+      <ul class="mt-5 grid grid-cols-3">
+        <li
+          v-for="file in files ?? []"
+          :key="`content-file-${file.sha}`"
         >
-      </li>
-    </ul>
+          <router-link
+            :to="`/content-type/${contentTypeName}/file?path=${file.path}`"
+            class="capitalize block w-full bg-neutral hover:bg-neutral-focus p-3 rounded-md transition-colors"
+            >{{ getFileTitle(file) }}</router-link
+          >
+        </li>
+      </ul>
+    </template>
   </div>
 </template>
