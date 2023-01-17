@@ -2,12 +2,12 @@
 import BaseField from '#src/components/BaseField.vue'
 import { readFile, updateFile } from '#src/modules/api'
 import { config } from '#src/modules/config'
-import { getFrontMatter } from '#src/utils/md'
 import type { SingleFile, ContentType } from '#types/index'
 import { isEqual } from 'lodash-es'
 import type { JsonObject } from 'type-fest'
 import { parse, stringify } from 'yaml'
 import { parse as parsePath } from 'path-browserify'
+import graymatter from 'gray-matter'
 
 defineComponent({
   name: 'IndexPage',
@@ -16,6 +16,7 @@ defineComponent({
 const router = useRouter()
 const route = useRoute()
 const path = route.query.path
+const newFile = route.query.new
 const _contentType = route.params.contentType
 
 /**
@@ -109,12 +110,13 @@ onMounted(async () => {
   const fileMeta = await readFile(path)
   file.value = fileMeta
 
-  let _content = atob(fileMeta.content)
+  const _content = atob(fileMeta.content)
 
-  const ext = fileMeta.path.split('/').at(-1)?.split('.').at(-1)
+  const ext = parsePath(fileMeta.path).ext
 
   if (ext === 'md') {
-    _content = getFrontMatter(_content)
+    console.log(graymatter(_content).matter)
+    // _content = getFrontMatter(_content)
   }
 
   const json = parse(_content.trim() || '{}')
