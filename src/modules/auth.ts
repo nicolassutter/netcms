@@ -1,6 +1,6 @@
 import { useUserStore } from '#src/stores/userStore'
 import netlifyIdentity from 'netlify-identity-widget'
-import { router } from '#src/lib'
+import { router } from '#src/router'
 
 export function netlifyInit() {
   const userStore = useUserStore()
