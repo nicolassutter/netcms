@@ -1,6 +1,7 @@
 import { appendSlash, call } from '#src/utils/utils'
-import type { File, SingleFile } from '#types/index'
-import { $fetch } from 'ohmyfetch'
+import type { CreateFileResponse, File, SingleFile } from '#types/index'
+import { $fetch, FetchError } from 'ohmyfetch'
+import { netlifyIdentity } from './auth'
 import { config, extensions } from './config'
 
 class API {
@@ -36,14 +37,17 @@ export async function createFile(options: {
   content: string
   message: string
 }) {
-  await authenticatedApi.$fetch(`/git/github/contents${options.path}`, {
-    method: 'PUT',
-    body: {
-      message: options.message,
-      committer: config.committer,
-      content: btoa(options.content),
+  return await authenticatedApi.$fetch<CreateFileResponse>(
+    `/git/github/contents${options.path}`,
+    {
+      method: 'PUT',
+      body: {
+        message: options.message,
+        committer: config.committer,
+        content: btoa(options.content),
+      },
     },
-  })
+  )
 }
 
 /**
@@ -59,7 +63,7 @@ export async function updateFile(options: {
   message: string
   sha: string
 }) {
-  await authenticatedApi.$fetch(
+  return await authenticatedApi.$fetch<CreateFileResponse>(
     `/git/github/contents${appendSlash(options.path)}`,
     {
       method: 'PUT',
@@ -131,6 +135,19 @@ export async function listContent(contentType: string) {
         )) ?? []
       )
     } catch (error) {
+      // Netlify error when it cannot communicate with Github API.
+      // The user needs to relog to fix it.
+      const isSessionError =
+        error instanceof FetchError &&
+        error.statusCode === 400 &&
+        error.data?.msg === 'Operator microservice headers missing'
+
+      if (isSessionError) {
+        netlifyIdentity.logout()
+        // TODO: display a toast
+        throw new Error('Session needs to be refreshed')
+      }
+
       // TODO: display a toast
       throw new Error('content type directory does not exist')
     }
