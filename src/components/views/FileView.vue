@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BaseField from '#src/components/BaseField.vue'
-import { readFile, updateFile } from '#src/modules/api'
+import { createFile, readFile, updateFile } from '#src/modules/api'
 import { config } from '#src/modules/config'
 import type { SingleFile, ContentType } from '#types/index'
 import { isEqual } from 'lodash-es'
@@ -9,14 +9,21 @@ import { parse, stringify } from 'yaml'
 import { parse as parsePath } from 'path-browserify'
 import graymatter from 'gray-matter'
 
-defineComponent({
-  name: 'IndexPage',
-})
+const props = withDefaults(
+  defineProps<{
+    /**
+     * @default false
+     */
+    isNew?: boolean
+  }>(),
+  {
+    isNew: false,
+  },
+)
 
 const router = useRouter()
 const route = useRoute()
-const path = route.query.path
-const newFile = route.query.new
+const queryPath = route.query.path
 const _contentType = route.params.contentType
 
 /**
@@ -64,7 +71,14 @@ function initEmptyFields() {
 }
 
 async function publish() {
-  const ext = parsePath(file.value?.path ?? '').ext
+  const ext = props.isNew
+    ? contentType.value?.format
+    : parsePath(file.value?.path ?? '').ext
+
+  if (!ext) {
+    // TODO: add toast
+    throw new Error('Extension could not be retrieved')
+  }
 
   let newContent = JSON.stringify(writableContent.value)
 
@@ -80,10 +94,24 @@ async function publish() {
 
   const exists = Boolean(file.value?.sha)
 
-  if (exists && file.value?.path) {
+  const payload: Parameters<typeof createFile>[0] = {
+    content: newContent,
+    // TODO: get the new file path
+    message: `feat: add file "${'file'}"`,
+    // TODO: get the new file path
+    path: '',
+  }
+
+  if (!exists) {
+    const createdFile = await createFile(payload)
+    // redirect to the edit page
+    router.push(
+      `/content-type/${_contentType}/file?path=${createdFile.content.path}`,
+    )
+  } else if (file.value?.path) {
     try {
       await updateFile({
-        content: newContent,
+        ...payload,
         message: `chore: update file "${file.value?.path}"`,
         path: file.value?.path,
         sha: file.value?.sha,
@@ -95,34 +123,41 @@ async function publish() {
       throw new Error('failed to update file')
     }
   }
-
-  if (!exists) {
-    // await createFile()
-  }
 }
 
 onMounted(async () => {
-  if (typeof path !== 'string' || typeof _contentType !== 'string') {
+  const isAllowed =
+    typeof _contentType === 'string' &&
+    (typeof queryPath === 'string' || props.isNew)
+
+  if (!isAllowed) {
     router.push('/')
     return
   }
 
-  const fileMeta = await readFile(path)
-  file.value = fileMeta
+  let jsonContent: JsonObject | undefined
 
-  const _content = atob(fileMeta.content)
+  // Only query Github if the file exists
+  if (typeof queryPath === 'string') {
+    const fileMeta = await readFile(queryPath)
+    file.value = fileMeta
 
-  const ext = parsePath(fileMeta.path).ext
+    const rawFileContent = atob(fileMeta.content)
+    const ext = parsePath(fileMeta.path).ext
 
-  if (ext === 'md') {
-    console.log(graymatter(_content).matter)
-    // _content = getFrontMatter(_content)
+    if (ext === 'md') {
+      console.log(graymatter(rawFileContent).matter)
+      // _content = getFrontMatter(_content)
+    }
+
+    jsonContent = parse(rawFileContent.trim() || '{}')
   }
 
-  const json = parse(_content.trim() || '{}')
+  jsonContent ??= {}
 
-  content.value = JSON.parse(JSON.stringify(json))
-  writableContent.value = JSON.parse(JSON.stringify(json))
+  // Deep copy the object twice so they don't mutate each other
+  content.value = JSON.parse(JSON.stringify(jsonContent))
+  writableContent.value = JSON.parse(JSON.stringify(jsonContent))
 
   contentType.value = config.content_types?.find(
     (type) => type.name === _contentType,
