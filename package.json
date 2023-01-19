@@ -38,6 +38,7 @@
     "normalize.css": "^8.0.1",
     "ohmyfetch": "^0.4.21",
     "pinia": "^2.0.28",
+    "slugify": "^1.6.5",
     "swiper": "^8.4.5",
     "uuid": "^9.0.0",
     "vue": "^3.2.45",

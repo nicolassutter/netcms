@@ -5,9 +5,10 @@ import { config } from '#src/modules/config'
 import type { SingleFile, ContentType } from '#types/index'
 import { isEqual } from 'lodash-es'
 import type { JsonObject } from 'type-fest'
-import { parse, stringify } from 'yaml'
-import { parse as parsePath } from 'path-browserify'
+import { parse, stringify as stringifyToYaml } from 'yaml'
+import { parse as parsePath, join as joinPath } from 'path-browserify'
 import graymatter from 'gray-matter'
+import slugify from 'slugify'
 
 const props = withDefaults(
   defineProps<{
@@ -46,10 +47,13 @@ const writableContent = ref<JsonObject>()
  */
 const contentType = ref<ContentType>()
 
-const fileTitle = computed(() =>
-  content.value && contentType.value?.title_field
-    ? content.value[contentType.value.title_field] ?? 'Untitled'
-    : '',
+const newFileTitle = computed(
+  () =>
+    `${
+      writableContent.value && contentType.value?.title_field
+        ? writableContent.value[contentType.value.title_field] ?? 'Untitled'
+        : ''
+    }`,
 )
 
 const contentHasChanged = computed(() => {
@@ -73,7 +77,7 @@ function initEmptyFields() {
 async function publish() {
   const ext = props.isNew
     ? contentType.value?.format
-    : parsePath(file.value?.path ?? '').ext
+    : parsePath(file.value?.path ?? 'unknown.json').ext
 
   if (!ext) {
     // TODO: add toast
@@ -83,27 +87,34 @@ async function publish() {
   let newContent = JSON.stringify(writableContent.value)
 
   // json -> yml -> frontmatter
-  if (ext === 'md') {
-    // const yml = stringify(writableContent.value)
+  if (ext === '.md') {
+    newContent = stringifyToYaml(writableContent.value)
   }
 
   // json -> yml
-  if (ext === 'yml') {
-    newContent = stringify(writableContent.value)
+  if (ext === '.yml') {
+    newContent = stringifyToYaml(writableContent.value)
   }
 
   const exists = Boolean(file.value?.sha)
 
-  const payload: Parameters<typeof createFile>[0] = {
-    content: newContent,
-    // TODO: get the new file path
-    message: `feat: add file "${'file'}"`,
-    // TODO: get the new file path
-    path: '',
+  if (!config.content_dir || typeof _contentType !== 'string') {
+    return
   }
 
   if (!exists) {
-    const createdFile = await createFile(payload)
+    const path = `${joinPath(
+      config.content_dir,
+      _contentType,
+      slugify(newFileTitle.value),
+    )}${ext}`
+
+    const createdFile = await createFile({
+      content: newContent,
+      message: `feat: add file "${path}"`,
+      path,
+    })
+
     // redirect to the edit page
     router.push(
       `/content-type/${_contentType}/file?path=${createdFile.content.path}`,
@@ -111,7 +122,7 @@ async function publish() {
   } else if (file.value?.path) {
     try {
       await updateFile({
-        ...payload,
+        content: newContent,
         message: `chore: update file "${file.value?.path}"`,
         path: file.value?.path,
         sha: file.value?.sha,
@@ -192,7 +203,7 @@ const { header } = useHeader()
     </Teleport>
 
     <div class="app-content-grid pt-5">
-      <h1 class="capitalize font-bold text-3xl">{{ fileTitle }}</h1>
+      <h1 class="capitalize font-bold text-3xl">{{ newFileTitle }}</h1>
 
       <div class="form max-w-xl mt-10">
         <template

@@ -45,6 +45,7 @@ specifiers:
   postcss-import: ^15.1.0
   postcss-nesting: ^10.2.0
   prettier: ^2.8.2
+  slugify: ^1.6.5
   swiper: ^8.4.5
   tailwindcss: ^3.2.4
   ts-json-schema-generator: ^1.2.0
@@ -74,6 +75,7 @@ dependencies:
   normalize.css: 8.0.1
   ohmyfetch: 0.4.21
   pinia: 2.0.28_prq2uz4lho2pwp6irk4cfkrxwu
+  slugify: 1.6.5
   swiper: 8.4.5
   uuid: 9.0.0
   vue: 3.2.45
@@ -10206,6 +10208,11 @@ packages:
       ansi-styles: 6.2.1
       is-fullwidth-code-point: 4.0.0
     dev: true
+
+  /slugify/1.6.5:
+    resolution: {integrity: sha512-8mo9bslnBO3tr5PEVFzMPIWwWnipGS0xVbYf65zxDqfNwmzYn1LpiKNrR6DlClusuvo+hDHd1zKpmfAe83NQSQ==}
+    engines: {node: '>=8.0.0'}
+    dev: false
 
   /snapdragon-node/2.1.1:
     resolution: {integrity: sha512-O27l4xaMYt/RSQ5TR3vpWCAB5Kb/czIcqUFOM/C4fYcLnbZUc1PkjTAMjof2pBWaSTwOUd6qUHcFGVGj7aIwnw==}

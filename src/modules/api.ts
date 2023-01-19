@@ -38,7 +38,7 @@ export async function createFile(options: {
   message: string
 }) {
   return await authenticatedApi.$fetch<CreateFileResponse>(
-    `/git/github/contents${options.path}`,
+    `/git/github/contents${appendSlash(options.path)}`,
     {
       method: 'PUT',
       body: {
