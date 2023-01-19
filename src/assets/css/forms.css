@@ -24,8 +24,8 @@ textarea {
   }
 }
 
-.btn {
-  @apply rounded-sm p-2 capitalize transition-colors;
+:is(.btn) {
+  @apply rounded-sm p-2 capitalize transition-colors flex items-center;
 
   &:disabled {
     @apply filter cursor-not-allowed brightness-50;

@@ -3,6 +3,7 @@ import { listContent } from '#src/modules/api'
 // import { config } from '#src/modules/config'
 import { parse } from 'path-browserify'
 import type { File } from '#types/index'
+import IconAdd from '~icons/carbon/add'
 
 defineComponent({
   name: 'IndexPage',
@@ -63,6 +64,14 @@ watch(contentTypeName, () => {
 
     <template v-else>
       <h1 class="capitalize font-bold text-3xl">{{ contentTypeName }}</h1>
+
+      <router-link
+        class="btn mt-5 bg-primary hover:bg-primary-focus w-max"
+        :to="`/content-type/${contentTypeName}/file/new`"
+      >
+        <IconAdd class="mr-2"></IconAdd>
+        Create new "{{ contentTypeName }}"
+      </router-link>
 
       <ul class="mt-5 grid grid-cols-3">
         <li
