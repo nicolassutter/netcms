@@ -7,8 +7,8 @@ import { isEqual } from 'lodash-es'
 import type { JsonObject } from 'type-fest'
 import { parse, stringify as stringifyToYaml } from 'yaml'
 import { parse as parsePath, join as joinPath } from 'path-browserify'
-import graymatter from 'gray-matter'
 import slugify from 'slugify'
+import { getFrontmatter } from '#src/utils/utils'
 
 const props = withDefaults(
   defineProps<{
@@ -76,7 +76,7 @@ function initEmptyFields() {
 
 async function publish() {
   const ext = props.isNew
-    ? contentType.value?.format
+    ? `.${contentType.value?.format}`
     : parsePath(file.value?.path ?? 'unknown.json').ext
 
   if (!ext) {
@@ -88,7 +88,11 @@ async function publish() {
 
   // json -> yml -> frontmatter
   if (ext === '.md') {
-    newContent = stringifyToYaml(writableContent.value)
+    // TODO: add the old markdown content after the frontmatter
+    const mdContent = ''
+    newContent = `---\n${stringifyToYaml(
+      writableContent.value,
+    )}\n---${mdContent}`
   }
 
   // json -> yml
@@ -150,18 +154,23 @@ onMounted(async () => {
 
   // Only query Github if the file exists
   if (typeof queryPath === 'string') {
-    const fileMeta = await readFile(queryPath)
-    file.value = fileMeta
+    try {
+      const fileMeta = await readFile(queryPath)
+      file.value = fileMeta
+      const rawFileContent = atob(fileMeta.content)
+      const ext = parsePath(fileMeta.path).ext
+      let contentToParse = rawFileContent
 
-    const rawFileContent = atob(fileMeta.content)
-    const ext = parsePath(fileMeta.path).ext
+      if (ext === '.md') {
+        const frontmatter = getFrontmatter(rawFileContent)
+        contentToParse = frontmatter
+      }
 
-    if (ext === 'md') {
-      console.log(graymatter(rawFileContent).matter)
-      // _content = getFrontMatter(_content)
+      jsonContent = parse(contentToParse.trim() || '{}')
+    } catch (error) {
+      // TODO: display toast
+      router.push('/')
     }
-
-    jsonContent = parse(rawFileContent.trim() || '{}')
   }
 
   jsonContent ??= {}

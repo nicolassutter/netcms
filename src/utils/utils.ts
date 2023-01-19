@@ -1,3 +1,5 @@
+import MarkdownIt from 'markdown-it'
+import MarkdownItFrontMatter from 'markdown-it-front-matter'
 import { $fetch } from 'ohmyfetch'
 
 export function call<T extends (...args: any[]) => any>(cb: T): ReturnType<T> {
@@ -31,3 +33,19 @@ export async function remoteExists(url: string) {
     return exists
   }
 }
+
+/**
+ * Get the frontmatter in the given markdown content
+ */
+export function getFrontmatter(markdown: string) {
+  let content = ''
+
+  const md = MarkdownIt().use(MarkdownItFrontMatter, function (fm) {
+    content = fm
+  })
+
+  md.render(markdown)
+  return content
+}
+
+export const md = MarkdownIt()
