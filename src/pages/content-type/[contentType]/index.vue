@@ -4,6 +4,7 @@ import { listContent } from '#src/modules/api'
 import { parse } from 'path-browserify'
 import type { File } from '#types/index'
 import IconAdd from '~icons/carbon/add'
+import { useNotificationsStore } from '#src/stores/notificationsStore'
 
 defineComponent({
   name: 'IndexPage',
@@ -12,6 +13,7 @@ defineComponent({
 const router = useRouter()
 const route = useRoute()
 const contentTypeName = computed(() => route.params.contentType)
+const notificationsStore = useNotificationsStore()
 const isLoading = ref(false)
 
 const files = ref<File[]>()
@@ -38,7 +40,24 @@ async function init() {
     const contentFiles = await listContent(contentTypeName.value)
     files.value = contentFiles
   } catch (error) {
-    files.value = []
+    if (error instanceof Error && error.message === 'ECT404') {
+      notificationsStore.add({
+        content:
+          'The specified content type could not be found in the repo. A new folder will therefore be created.',
+        status: 'warning',
+      })
+
+      files.value = []
+    }
+
+    if (error instanceof Error && error.message === 'ECT404-1') {
+      notificationsStore.add({
+        content: 'The specified content type does not exist in your config.',
+        status: 'error',
+      })
+
+      router.push('/')
+    }
   } finally {
     isLoading.value = false
   }

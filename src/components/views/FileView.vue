@@ -9,6 +9,7 @@ import { parse, stringify as stringifyToYaml } from 'yaml'
 import { parse as parsePath, join as joinPath } from 'path-browserify'
 import slugify from 'slugify'
 import { getFrontmatter } from '#src/utils/utils'
+import { useNotificationsStore } from '#src/stores/notificationsStore'
 
 const props = withDefaults(
   defineProps<{
@@ -24,6 +25,7 @@ const props = withDefaults(
 
 const router = useRouter()
 const route = useRoute()
+const notificationsStore = useNotificationsStore()
 const queryPath = route.query.path
 const _contentType = route.params.contentType
 
@@ -80,8 +82,12 @@ async function publish() {
     : parsePath(file.value?.path ?? 'unknown.json').ext
 
   if (!ext) {
-    // TODO: add toast
-    throw new Error('Extension could not be retrieved')
+    notificationsStore.add({
+      content: "Sorry, the file's extension could not be retrieved",
+      status: 'error',
+    })
+
+    return
   }
 
   let newContent = JSON.stringify(writableContent.value)
@@ -168,7 +174,11 @@ onMounted(async () => {
 
       jsonContent = parse(contentToParse.trim() || '{}')
     } catch (error) {
-      // TODO: display toast
+      notificationsStore.add({
+        content: 'Sorry, an error occured while loading your file',
+        status: 'error',
+      })
+
       router.push('/')
     }
   }

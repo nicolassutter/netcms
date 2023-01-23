@@ -14,7 +14,7 @@ function isActive(contentType: ContentType) {
 </script>
 
 <template>
-  <aside class="bg-neutral px-2 pt-5">
+  <aside class="bg-neutral px-2 pt-5 overflow-y-auto">
     <nav>
       <h2 class="font-semibold text-lg">Content types</h2>
 

@@ -1,4 +1,5 @@
 import { router } from '#src/router'
+import { useNotificationsStore } from '#src/stores/notificationsStore'
 import { appendSlash, call } from '#src/utils/utils'
 import type { CreateFileResponse, File, SingleFile } from '#types/index'
 import { $fetch } from 'ohmyfetch'
@@ -20,10 +21,17 @@ class API {
           response._data?.msg === 'Operator microservice headers missing'
 
         if (isSessionError) {
+          const notificationsStore = useNotificationsStore()
           netlifyIdentity.logout()
+
           router.push('/')
-          // TODO: display a toast
-          throw new Error('Session needs to be refreshed')
+
+          notificationsStore.add({
+            content: 'Your session need to be refreshed, please log back in.',
+            status: 'error',
+          })
+
+          notificationsStore.$dispose()
         }
       },
     })
@@ -136,7 +144,7 @@ export async function listContent(contentType: string) {
   const content_dir = `${config.content_dir}/${contentType}`
 
   if (!config.content_types?.find((type) => type.name === contentType)) {
-    throw new Error('content type does not exist in the config')
+    throw new Error('ECT404-1')
   }
 
   const files = await call(async () => {
@@ -150,8 +158,7 @@ export async function listContent(contentType: string) {
         )) ?? []
       )
     } catch (error) {
-      // TODO: display a toast
-      throw new Error('content type directory does not exist')
+      throw new Error('ECT404')
     }
   })
 
