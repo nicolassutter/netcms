@@ -3,37 +3,44 @@ import SideBar from '#src/components/SideBar.vue'
 import IconHome from '~icons/carbon/home'
 import IconRocket from '~icons/carbon/rocket'
 import IconWeb from '~icons/carbon/wikis'
-import { netlifyInit } from '#src/modules/auth'
+import IconLogout from '~icons/carbon/logout'
+import { netlifyIdentity, netlifyInit } from '#src/modules/auth'
 import { config } from '#src/modules/config'
-import type { AnchorHTMLAttributes } from 'vue'
+import type { AnchorHTMLAttributes, Raw } from 'vue'
+import { useUserStore } from './stores/userStore'
 
 onMounted(() => {
   netlifyInit()
 })
+
+const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
 
 const { header } = useHeader()
 
 type Link =
   | {
       label: string
-      // any icon type is fine
-      icon: typeof IconHome
+      // any icon type is fine, it just need to be made non reactive for vue
+      icon: Raw<typeof IconHome>
       classes?: string
       props?: AnchorHTMLAttributes & { to?: string }
+      events?: Record<string, (e: Event) => void>
     }
   | undefined
 
-const links: Link[] = [
+const links = computed<Link[]>(() => [
   {
     label: 'Home',
-    icon: IconHome,
+    icon: markRaw(IconHome),
     props: {
       to: '/',
     },
   },
   {
     label: 'Hooks',
-    icon: IconRocket,
+    icon: markRaw(IconRocket),
     props: {
       to: '/hooks',
     },
@@ -41,7 +48,7 @@ const links: Link[] = [
   config.site_url
     ? {
         label: 'View site',
-        icon: IconWeb,
+        icon: markRaw(IconWeb),
         classes: 'ml-auto',
         props: {
           href: config.site_url,
@@ -50,44 +57,65 @@ const links: Link[] = [
         },
       }
     : undefined,
-]
+  userStore.isLogged
+    ? {
+        label: 'Logout',
+        icon: markRaw(IconLogout),
+        events: {
+          click: async () => {
+            await netlifyIdentity.logout()
+            router.push('/auth')
+          },
+        },
+      }
+    : undefined,
+])
 
-const filteredLinks = links.filter(
-  (item) => item !== undefined,
-) as NonNullable<Link>[]
+const filteredLinks = computed(
+  () => links.value.filter((item) => item !== undefined) as NonNullable<Link>[],
+)
 </script>
 
 <template>
-  <div
-    class="grid grid-rows-[theme(spacing.16),auto] grid-cols-[minmax(100px,250px)_5fr] min-h-full bg-base"
-  >
-    <header
-      ref="header"
-      class="col-span-full bg-neutral border-b border-base-100 px-2 flex items-center"
+  <div class="bg-base h-full">
+    <!-- Auth is a fullpage view -->
+    <router-view v-if="route.path === '/auth'"></router-view>
+
+    <div
+      v-else
+      class="grid grid-rows-[theme(spacing.16),auto] grid-cols-[minmax(100px,250px)_5fr] min-h-full bg-base"
     >
-      <ul class="flex items-cente w-full">
-        <li
-          v-for="link in filteredLinks"
-          :key="`link-${link.label}`"
-          class="mr-5"
-          :class="link.classes"
-        >
-          <component
-            :is="link.props?.href ? 'a' : 'router-link'"
-            v-bind="link.props"
-            class="flex items-center hover:text-accent"
+      <header
+        ref="header"
+        class="col-span-full bg-neutral border-b border-base-100 px-2 flex items-center"
+      >
+        <ul class="flex items-cente w-full">
+          <li
+            v-for="link in filteredLinks"
+            :key="`link-${link.label}`"
+            class="mr-5"
+            :class="link.classes"
           >
-            <component :is="link.icon"></component>
-            <span class="ml-2">{{ link.label }}</span>
-          </component>
-        </li>
-      </ul>
-    </header>
+            <component
+              :is="
+                link.props ? (link.props.href ? 'a' : 'router-link') : 'button'
+              "
+              v-bind="link.props"
+              class="flex items-center hover:text-accent"
+              v-on="link.events ?? {}"
+            >
+              <component :is="link.icon"></component>
+              <span class="ml-2">{{ link.label }}</span>
+            </component>
+          </li>
+        </ul>
+      </header>
 
-    <SideBar class="col-start-1 row-start-2"></SideBar>
+      <SideBar class="col-start-1 row-start-2"></SideBar>
 
-    <main class="app-content-grid col-start-2 row-start-2">
-      <router-view></router-view>
-    </main>
+      <main class="app-content-grid col-start-2 row-start-2">
+        <router-view></router-view>
+      </main>
+    </div>
   </div>
 </template>

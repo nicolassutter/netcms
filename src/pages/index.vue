@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { listContent } from '#src/modules/api'
 import { useUserStore } from '#src/stores/userStore'
 import { config } from '#src/modules/config'
 
@@ -9,15 +8,6 @@ defineComponent({
 
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
-
-const defaultContentType = config.content_types?.at(0)
-
-onMounted(async () => {
-  if (defaultContentType) {
-    const files = await listContent(defaultContentType?.name)
-    console.log(files)
-  }
-})
 </script>
 
 <template>

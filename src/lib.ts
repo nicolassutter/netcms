@@ -10,8 +10,13 @@ import { router } from './router'
 // @ts-ignore tsc isn't happy for some reason
 import App from './App.vue'
 
+let userStore: ReturnType<typeof useUserStore>
+
 router.beforeEach((to, _from) => {
-  const userStore = useUserStore()
+  if (!userStore) {
+    userStore = useUserStore()
+  }
+
   const toRequireAuth = [true, undefined].includes(to.meta.requireAuth as any)
 
   if (!userStore.isLogged && toRequireAuth) {

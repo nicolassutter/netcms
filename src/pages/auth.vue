@@ -26,9 +26,10 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="auth-page">
+  <div class="auth-page flex items-center justify-center min-h-full">
     <button
       v-if="!isLogged"
+      class="btn bg-primary hover:bg-primary-focus"
       v-on:click="openLogin"
     >
       Open Login
@@ -36,6 +37,7 @@ onMounted(() => {
 
     <button
       v-if="isLogged"
+      class="btn bg-primary"
       v-on:click="logout"
     >
       Log out
