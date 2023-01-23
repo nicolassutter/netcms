@@ -63,14 +63,21 @@ export type ContentType = {
   title_field: string
 }
 
+export interface Hook {
+  name: string
+  url: string
+}
+
 export type Config = {
   committer: {
     email: string
     name: string
   }
   content_dir: string
+  site_url?: string
   assets_dir: string
   content_types: ContentType[]
+  hooks?: Hook[]
 }
 
 export type ConfigSchema = Config & {

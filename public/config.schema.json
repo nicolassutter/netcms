@@ -28,6 +28,9 @@
         "content_dir": {
           "type": "string"
         },
+        "site_url": {
+          "type": "string"
+        },
         "assets_dir": {
           "type": "string"
         },
@@ -35,6 +38,12 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ContentType"
+          }
+        },
+        "hooks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Hook"
           }
         }
       },
@@ -268,6 +277,22 @@
         "name",
         "params",
         "type"
+      ],
+      "additionalProperties": false
+    },
+    "Hook": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "url"
       ],
       "additionalProperties": false
     }
