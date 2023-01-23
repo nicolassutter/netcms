@@ -1,7 +1,7 @@
 import { router } from '#src/router'
 import { appendSlash, call } from '#src/utils/utils'
 import type { CreateFileResponse, File, SingleFile } from '#types/index'
-import { $fetch, FetchError } from 'ohmyfetch'
+import { $fetch } from 'ohmyfetch'
 import { netlifyIdentity } from './auth'
 import { config, extensions } from './config'
 
@@ -12,13 +12,12 @@ class API {
     this.$fetch = $fetch.create({
       baseURL: `https://elegant-muffin-ddcbaa.netlify.app/.netlify`,
       headers: this.defaultHeaders ?? {},
-      onResponseError({ error }) {
+      onResponseError({ response }) {
         // Netlify error when it cannot communicate with Github API.
         // The user needs to relog to fix it.
         const isSessionError =
-          error instanceof FetchError &&
-          error.statusCode === 400 &&
-          error.data?.msg === 'Operator microservice headers missing'
+          response.status === 400 &&
+          response._data?.msg === 'Operator microservice headers missing'
 
         if (isSessionError) {
           netlifyIdentity.logout()
