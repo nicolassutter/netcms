@@ -8,6 +8,7 @@ import { netlifyIdentity, netlifyInit } from '#src/modules/auth'
 import { config } from '#src/modules/config'
 import type { AnchorHTMLAttributes, Raw } from 'vue'
 import { useUserStore } from './stores/userStore'
+import NotificationsContainer from '#src/components/NotificationsContainer.vue'
 
 onMounted(() => {
   netlifyInit()
@@ -78,6 +79,10 @@ const filteredLinks = computed(
 
 <template>
   <div class="bg-base h-full">
+    <NotificationsContainer
+      class="fixed top-0 right-0"
+    ></NotificationsContainer>
+
     <!-- Auth is a fullpage view -->
     <router-view v-if="route.path === '/auth'"></router-view>
 
