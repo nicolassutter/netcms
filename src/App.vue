@@ -124,3 +124,9 @@ const filteredLinks = computed(
     </div>
   </div>
 </template>
+
+<style scoped>
+.router-link-active {
+  @apply bg-base-100 text-accent;
+}
+</style>
