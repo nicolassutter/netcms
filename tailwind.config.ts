@@ -1,5 +1,7 @@
 import { theme } from './src/themes/catppuccin-macchiato'
 import { type Config } from 'tailwindcss'
+import plugin from 'tailwindcss/plugin'
+import type { CSSRuleObject } from 'tailwindcss/types/config'
 
 export default {
   content: ['./index.html', './src/**/*.{vue,ts,js,tsx,jsx}'],
@@ -17,5 +19,22 @@ export default {
       ...theme.colors,
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addComponents, theme }) => {
+      const btns = ['primary', 'secondary', 'accent'].map((variant) => {
+        return [
+          `.btn-${variant}`,
+          {
+            'background-color': theme(`colors.${variant}`),
+            color: theme(`colors.${variant}-content`),
+            '&:hover': {
+              'background-color': theme(`colors.${variant}-focus`),
+            },
+          } as CSSRuleObject,
+        ]
+      })
+
+      addComponents(Object.fromEntries(btns))
+    }),
+  ],
 } satisfies Config
