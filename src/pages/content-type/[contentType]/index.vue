@@ -85,7 +85,7 @@ watch(contentTypeName, () => {
       <h1 class="capitalize font-bold text-3xl">{{ contentTypeName }}</h1>
 
       <router-link
-        class="btn mt-5 bg-primary hover:bg-primary-focus w-max"
+        class="btn mt-5 btn-primary w-max"
         :to="`/content-type/${contentTypeName}/file/new`"
       >
         <IconAdd class="mr-2"></IconAdd>

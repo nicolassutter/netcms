@@ -14,7 +14,7 @@ function isActive(contentType: ContentType) {
 </script>
 
 <template>
-  <aside class="bg-neutral px-2 pt-5 overflow-y-auto">
+  <aside class="bg-neutral px-5 pt-5 overflow-y-auto">
     <nav>
       <h2 class="font-semibold text-lg">Content types</h2>
 
@@ -31,10 +31,9 @@ function isActive(contentType: ContentType) {
             <template v-slot:default="{ href, navigate }">
               <a
                 :href="href"
-                class="capitalize rounded-sm p-3 w-full block transition-colors"
+                class="capitalize rounded-md p-3 w-full block transition-colors"
                 :class="{
-                  'bg-secondary text-secondary-content hover:bg-secondary-focus':
-                    isActive(contentType),
+                  'btn-secondary': isActive(contentType),
                   'hover:bg-base-100': !isActive(contentType),
                 }"
                 v-on:click="navigate"

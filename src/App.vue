@@ -92,13 +92,13 @@ const filteredLinks = computed(
     >
       <header
         ref="header"
-        class="col-span-full bg-neutral border-b border-base-100 px-2 flex items-center"
+        class="col-span-full bg-neutral border-b border-base-100 px-5 flex items-center"
       >
         <ul class="flex items-cente w-full">
           <li
             v-for="link in filteredLinks"
             :key="`link-${link.label}`"
-            class="mr-5"
+            class="mr-5 last:mr-0"
             :class="link.classes"
           >
             <component
@@ -106,7 +106,7 @@ const filteredLinks = computed(
                 link.props ? (link.props.href ? 'a' : 'router-link') : 'button'
               "
               v-bind="link.props"
-              class="flex items-center hover:text-accent"
+              class="flex btn items-center hover:text-accent hover:bg-base-100"
               v-on="link.events ?? {}"
             >
               <component :is="link.icon"></component>
