@@ -34,18 +34,29 @@ async function tryHook(hook: Hook) {
   <div class="hooks-page">
     <h2>Hooks</h2>
 
-    <ul class="flex flex-wrap gap-3 mt-5">
-      <li
+    <table class="mt-5">
+      <tr>
+        <th>Hook</th>
+        <th>Hook description</th>
+      </tr>
+
+      <tr
         v-for="hook in hooks"
         :key="hook.id"
       >
-        <button
-          class="btn bg-info text-info-content"
-          v-on:click="tryHook(hook)"
-        >
-          {{ hook.name }}
-        </button>
-      </li>
-    </ul>
+        <td>
+          <button
+            class="btn btn-secondary"
+            v-on:click="tryHook(hook)"
+          >
+            {{ hook.name }}
+          </button>
+        </td>
+
+        <td>
+          <p>{{ hook.description ?? 'No description provided' }}</p>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>

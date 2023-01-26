@@ -66,6 +66,7 @@ export type ContentType = {
 export interface Hook {
   name: string
   url: string
+  description?: string
 }
 
 export type Config = {

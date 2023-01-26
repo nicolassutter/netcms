@@ -288,6 +288,9 @@
         },
         "url": {
           "type": "string"
+        },
+        "description": {
+          "type": "string"
         }
       },
       "required": [
