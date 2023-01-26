@@ -4,6 +4,7 @@ import { listContent } from '#src/modules/api'
 import { parse } from 'path-browserify'
 import type { File } from '#types/index'
 import IconAdd from '~icons/carbon/add'
+import IconArrowRight from '~icons/carbon/arrow-right'
 import { useNotificationsStore } from '#src/stores/notificationsStore'
 
 defineComponent({
@@ -99,9 +100,17 @@ watch(contentTypeName, () => {
         >
           <router-link
             :to="`/content-type/${contentTypeName}/file?path=${file.path}`"
-            class="capitalize block w-full bg-neutral hover:bg-neutral-focus p-3 rounded-md transition-colors"
-            >{{ getFileTitle(file) }}</router-link
+            class="capitalize w-full flex items-center bg-neutral hover:bg-neutral-focus p-3 rounded-md transition-colors"
           >
+            <span class="sr-only">Edit the file named </span>
+
+            {{ getFileTitle(file) }}
+
+            <IconArrowRight
+              class="ml-auto"
+              aria-hidden="true"
+            ></IconArrowRight
+          ></router-link>
         </li>
       </ul>
     </template>
