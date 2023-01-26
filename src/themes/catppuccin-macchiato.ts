@@ -4,11 +4,11 @@ export const theme = defineTheme({
   colors: {
     primary: '#c6a0f6',
     'primary-focus': '#B290DD',
-    'primary-content': '#F6F1FE',
+    'primary-content': '#453856',
 
     secondary: '#f5bde6',
     'secondary-focus': '#DDAACF',
-    'secondary-content': '#FEF5FB',
+    'secondary-content': '#564251',
 
     accent: '#8bd5ca',
     'accent-focus': '#7DC0B6',
@@ -25,15 +25,15 @@ export const theme = defineTheme({
     'base-content': '#E4E4E8',
 
     info: '#8aadf4',
-    'info-content': '#EDF3FD',
+    'info-content': '#293449',
 
     success: '#a6da95',
-    'success-content': '#F2F9EF',
+    'success-content': '#42573C',
 
     warning: '#eed49f',
-    'warning-content': '#FCF9F1',
+    'warning-content': '#534A38',
 
     error: '#ed8796',
-    'error-content': '#FCEDEF',
+    'error-content': '#5F363C',
   },
 })
