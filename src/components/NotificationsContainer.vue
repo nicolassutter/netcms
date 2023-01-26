@@ -20,7 +20,11 @@ const notificationsStore = useNotificationsStore()
         'bg-warning text-warning-content': notification.status === 'warning',
       }"
     >
-      <span class="grow">{{ notification.content }}</span>
+      <span
+        class="grow"
+        role="alert"
+        >{{ notification.content }}</span
+      >
 
       <button v-on:click="notificationsStore.remove(notification)">
         <IconClose></IconClose>
