@@ -31,9 +31,9 @@ function isActive(contentType: ContentType) {
             <template v-slot:default="{ href, navigate }">
               <a
                 :href="href"
-                class="capitalize rounded-md p-3 w-full block transition-colors"
+                class="capitaliz btn rounded-md w-full block transition-colors"
                 :class="{
-                  'btn-secondary': isActive(contentType),
+                  'bg-base-100 text-accent': isActive(contentType),
                   'hover:bg-base-100': !isActive(contentType),
                 }"
                 v-on:click="navigate"
