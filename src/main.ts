@@ -40,59 +40,10 @@ const config = defineConfig({
             ],
           },
         }),
-      ],
-    },
-    {
-      name: 'project',
-      format: 'json',
-      title_field: 'project_name',
-      fields: [
-        {
-          name: 'project_name',
-          type: 'text',
-          label: 'Project name',
-          params: {},
-        },
-        {
-          name: 'project_body',
-          type: 'rich',
-          label: 'Project body',
-          params: {},
-        },
-        {
-          name: 'project_technologies',
-          type: 'select',
-          label: 'Project technologies',
-          params: {
-            options: [
-              {
-                label: 'Vue',
-                value: 'vue',
-              },
-              {
-                label: 'React',
-                value: 'react',
-              },
-              {
-                label: 'Svelte',
-                value: 'svelte',
-              },
-            ],
-          },
-        },
-      ],
-    },
-    {
-      name: 'thing',
-      title_field: 'thing1',
-      format: 'md',
-      fields: [
-        {
-          name: 'thing1',
-          label: 'The thing',
-          type: 'text',
-          params: {},
-        },
+        field('check', {
+          name: 'check_field',
+          label: 'check field',
+        }),
       ],
     },
   ],

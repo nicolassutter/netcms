@@ -38,6 +38,12 @@ const model = computed({
     v-bind="{ id }"
   ></textarea>
 
+  <input
+    v-else-if="field.type === 'check'"
+    v-model="model"
+    type="checkbox"
+  />
+
   <div
     v-else-if="field.type === 'select'"
     class="relative"

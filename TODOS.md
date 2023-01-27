@@ -4,8 +4,6 @@
 - Implement missing fields
   - media
   - rich
-- Add new field types
-  - boolean (checkboxes)
 - Make hooks page pretty
 - Display things on home page
 - BUG:

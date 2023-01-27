@@ -1,5 +1,13 @@
 import { z } from 'zod'
 
+/*
+ * To add a new field type:
+ * 1. Define its name in `FieldTypeSchema`
+ * 2. Create its schema (could take another and modify it)
+ * 3. Add the schema to `AnyFieldSchema`
+ * 4. Finally, add it to `fieldsMap`
+ */
+
 export const FormatSchema = z.enum(['json', 'yml', 'md'])
 
 export const FieldTypeSchema = z.enum([
@@ -8,6 +16,7 @@ export const FieldTypeSchema = z.enum([
   'select',
   'rich',
   'media',
+  'check',
 ])
 
 export const FieldSchema = z.object({
@@ -20,10 +29,18 @@ export const SelectOptionSchema = z.object({
   value: z.string(),
 })
 
+export const CheckFieldSchema = z
+  .object({
+    params: z.object({}).optional(),
+    default: z.boolean({}).default(false),
+    type: z.literal('check' satisfies FieldType),
+  })
+  .merge(FieldSchema)
+
 export const TextFieldSchema = z
   .object({
     params: z.object({}).optional(),
-    default: z.string().default('').optional(),
+    default: z.string().default(''),
     type: z.literal('text' satisfies FieldType),
   })
   .merge(FieldSchema)
@@ -31,7 +48,7 @@ export const TextFieldSchema = z
 export const EmailFieldSchema = z
   .object({
     params: z.object({}).optional(),
-    default: z.string().default('').optional(),
+    default: z.string().default(''),
     type: z.literal('email' satisfies FieldType),
   })
   .merge(FieldSchema)
@@ -39,7 +56,7 @@ export const EmailFieldSchema = z
 export const RichFieldSchema = z
   .object({
     params: z.object({}).optional(),
-    default: z.string().default('').optional(),
+    default: z.string().default(''),
     type: z.literal('rich' satisfies FieldType),
   })
   .merge(FieldSchema)
@@ -57,9 +74,9 @@ export const SelectFieldSchema = z
   .object({
     params: z.object({
       options: z.array(SelectOptionSchema),
-      multiple: z.boolean().default(false).optional(),
+      multiple: z.boolean().default(false),
     }),
-    default: z.string().default('').optional(),
+    default: z.string().default(''),
     type: z.literal('select' satisfies FieldType),
   })
   .merge(FieldSchema)
@@ -73,6 +90,7 @@ export const AnyFieldSchema = z.discriminatedUnion('type', [
   SelectFieldSchema,
   RichFieldSchema,
   MediaFieldSchema,
+  CheckFieldSchema,
 ])
 
 const ContentTypeSchema = z.object({
@@ -106,22 +124,23 @@ export const ConfigSchema = z.object({
   hooks: z.array(HookSchema).optional(),
 })
 
-export type Format = z.infer<typeof FormatSchema>
-export type FieldType = z.infer<typeof FieldTypeSchema>
-export type SelectOption = z.infer<typeof SelectOptionSchema>
-export type TextField = z.infer<typeof TextFieldSchema>
-export type EmailField = z.infer<typeof EmailFieldSchema>
-export type SelectField = z.infer<typeof SelectFieldSchema>
-export type RichField = z.infer<typeof RichFieldSchema>
-export type MediaField = z.infer<typeof MediaFieldSchema>
-export type AnyField = z.infer<typeof AnyFieldSchema>
+export type Format = z.input<typeof FormatSchema>
+export type FieldType = z.input<typeof FieldTypeSchema>
+export type SelectOption = z.input<typeof SelectOptionSchema>
+export type TextField = z.input<typeof TextFieldSchema>
+export type EmailField = z.input<typeof EmailFieldSchema>
+export type CheckField = z.input<typeof CheckFieldSchema>
+export type SelectField = z.input<typeof SelectFieldSchema>
+export type RichField = z.input<typeof RichFieldSchema>
+export type MediaField = z.input<typeof MediaFieldSchema>
+export type AnyField = z.input<typeof AnyFieldSchema>
 
-export type ContentType = z.infer<typeof ContentTypeSchema>
-export type Hook = z.infer<typeof HookSchema>
-export type Config = z.infer<typeof ConfigSchema>
+export type ContentType = z.input<typeof ContentTypeSchema>
+export type Hook = z.input<typeof HookSchema>
+export type Config = z.input<typeof ConfigSchema>
 
 export type FieldsMap = {
-  [K in keyof typeof fieldsMap]: z.infer<(typeof fieldsMap)[K]>
+  [K in keyof typeof fieldsMap]: z.input<(typeof fieldsMap)[K]>
 }
 
 export const fieldsMap = {
@@ -130,4 +149,5 @@ export const fieldsMap = {
   select: SelectFieldSchema,
   rich: RichFieldSchema,
   media: MediaFieldSchema,
+  check: CheckFieldSchema,
 } satisfies Record<FieldType, unknown>

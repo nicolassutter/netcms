@@ -17,7 +17,7 @@ select {
 }
 
 input[type="checkbox"] {
-  @apply appearance-none w-5 h-5 bg-base-100 rounded transition-colors;
+  @apply appearance-none w-5 h-5 bg-base-100 rounded transition-colors mt-2;
 
   &:checked {
     @apply bg-primary bg-no-repeat bg-center;
