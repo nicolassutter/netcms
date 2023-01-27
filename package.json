@@ -17,15 +17,13 @@
     "dist"
   ],
   "scripts": {
-    "dev": "npm-run-all --parallel dev:vite dev:generate:schemas",
+    "dev": "npm-run-all --parallel dev:vite",
     "dev:vite": "vite",
-    "build": "vue-tsc && cross-env NODE_ENV='production' nr generate:schemas && vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "prepare": "husky install",
     "lint:js": "eslint --ext .js,.ts,.tsx,.vue --ignore-path .gitignore .",
-    "generate:schemas": "jiti scripts/schema.ts",
-    "dev:generate:schemas": "cross-env NODE_ENV='development' jiti scripts/schema.ts",
-    "release": "nr generate:schemas"
+    "release": ""
   },
   "dependencies": {
     "@types/markdown-it": "^12.2.3",
@@ -82,7 +80,6 @@
     "postcss-nesting": "^10.2.0",
     "prettier": "^2.8.2",
     "tailwindcss": "^3.2.4",
-    "ts-json-schema-generator": "^1.2.0",
     "type-fest": "^3.5.1",
     "typescript": "^4.9.4",
     "unplugin-auto-import": "^0.12.1",

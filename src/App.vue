@@ -92,7 +92,7 @@ const filteredLinks = computed(
     >
       <header
         ref="header"
-        class="col-span-full bg-neutral border-b border-base-100 px-5 flex items-center"
+        class="col-span-full bg-neutral px-5 flex items-center"
       >
         <ul class="flex items-cente w-full">
           <li

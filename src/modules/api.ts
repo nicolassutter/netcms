@@ -13,7 +13,7 @@ class API {
     this.$fetch = $fetch.create({
       baseURL: `https://elegant-muffin-ddcbaa.netlify.app/.netlify`,
       headers: this.defaultHeaders ?? {},
-      onResponseError({ response }) {
+      async onResponseError({ response }) {
         // Netlify error when it cannot communicate with Github API.
         // The user needs to relog to fix it.
         const isSessionError =
@@ -22,12 +22,12 @@ class API {
 
         if (isSessionError) {
           const notificationsStore = useNotificationsStore()
-          netlifyIdentity.logout()
+          await netlifyIdentity.logout()
 
           router.push('/')
 
           notificationsStore.add({
-            content: 'Your session need to be refreshed, please log back in.',
+            content: 'Your session needs to be refreshed, please log back in.',
             status: 'error',
           })
 

@@ -1,7 +1,4 @@
 {
-  "yaml.schemas": {
-    "public/config.schema.json": "netcms.config.yml"
-  },
   "css.validate": false,
   "postcss.validate": false
 }

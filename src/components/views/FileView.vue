@@ -2,7 +2,12 @@
 import BaseField from '#src/components/BaseField.vue'
 import { createFile, readFile, updateFile } from '#src/modules/api'
 import { config } from '#src/modules/config'
-import type { SingleFile, ContentType } from '#types/index'
+import type { SingleFile, ContentType, AnyField } from '#types/index'
+import {
+  TextFieldSchema,
+  MediaFieldSchema,
+  SelectFieldSchema,
+} from '#types/index'
 import { isEqual } from 'lodash-es'
 import type { JsonObject } from 'type-fest'
 import { parse, stringify as stringifyToYaml } from 'yaml'
@@ -63,17 +68,63 @@ const contentHasChanged = computed(() => {
 })
 
 function initEmptyFields() {
-  contentType.value?.fields.forEach((field) => {
+  for (const field of contentType.value?.fields ?? []) {
     if (!writableContent.value) {
       return
     }
 
-    // If the field does not exist yet
-    // TODO: Do we only allow strings ? Or more options, for example, in a select field.
-    if (!(field.name in writableContent.value)) {
-      writableContent.value[field.name] = ''
+    let schema
+
+    /**
+     * Define the schema corresponding to the field
+     */
+    if (
+      field.type === 'text' ||
+      field.type === 'email' ||
+      field.type === 'rich'
+    ) {
+      schema = TextFieldSchema
+    } else if (field.type === 'media') {
+      schema = MediaFieldSchema
+    } else if (field.type === 'select') {
+      schema = SelectFieldSchema
+    } else {
+      router.push('/')
+
+      notificationsStore.add({
+        content: `The specified field type for "${field.name}" is not valid.`,
+        status: 'error',
+      })
+
+      break
     }
-  })
+
+    let parsedField: AnyField
+
+    /**
+     * Parsing the field
+     */
+    const res = schema.safeParse(field)
+
+    if (res.success) {
+      parsedField = res.data
+    } else {
+      router.push('/')
+
+      notificationsStore.add({
+        content: `The specified field "${field.name}" is not correctly defined.`,
+        status: 'error',
+      })
+
+      break
+    }
+
+    // If the field does not exist yet, initialize it
+    if (!(parsedField.name in writableContent.value)) {
+      writableContent.value[field.name] =
+        'default' in parsedField ? parsedField.default ?? null : null
+    }
+  }
 }
 
 async function publish() {
@@ -208,7 +259,7 @@ const { header } = useHeader()
       v-if="header"
       :to="header"
     >
-      <ul class="flex items-center h-full ml-auto">
+      <ul class="flex items-center h-full ml-5">
         <li class="ml-auto">
           <button
             class="btn bg-primary hover:not-disabled:bg-primary-focus"

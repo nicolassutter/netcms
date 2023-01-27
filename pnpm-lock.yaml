@@ -48,7 +48,6 @@ specifiers:
   slugify: ^1.6.5
   swiper: ^8.4.5
   tailwindcss: ^3.2.4
-  ts-json-schema-generator: ^1.2.0
   type-fest: ^3.5.1
   typescript: ^4.9.4
   unplugin-auto-import: ^0.12.1
@@ -119,7 +118,6 @@ devDependencies:
   postcss-nesting: 10.2.0_postcss@8.4.21
   prettier: 2.8.2
   tailwindcss: 3.2.4_aesdjsunmf4wiehhujt67my7tu
-  ts-json-schema-generator: 1.2.0
   type-fest: 3.5.1
   typescript: 4.9.4
   unplugin-auto-import: 0.12.1_@vueuse+core@9.10.0
@@ -10922,20 +10920,6 @@ packages:
 
   /triple-beam/1.3.0:
     resolution: {integrity: sha512-XrHUvV5HpdLmIj4uVMxHggLbFSZYIn7HEWsqePZcI50pco+MPqJ50wMGY794X7AOOhxOBAjbkqfAbEe/QMp2Lw==}
-    dev: true
-
-  /ts-json-schema-generator/1.2.0:
-    resolution: {integrity: sha512-tUMeO3ZvA12d3HHh7T/AK8W5hmUhDRNtqWRHSMN3ZRbUFt+UmV0oX8k1RK4SA+a+BKNHpmW2v06MS49e8Fi3Yg==}
-    engines: {node: '>=10.0.0'}
-    hasBin: true
-    dependencies:
-      '@types/json-schema': 7.0.11
-      commander: 9.5.0
-      glob: 8.0.3
-      json5: 2.2.3
-      normalize-path: 3.0.0
-      safe-stable-stringify: 2.4.2
-      typescript: 4.9.4
     dev: true
 
   /ts-morph/16.0.0:
