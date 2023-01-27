@@ -6,7 +6,9 @@ import type { File } from '#types/index'
 import IconAdd from '~icons/carbon/add'
 import IconArrowRight from '~icons/carbon/arrow-right'
 import IconDelete from '~icons/carbon/trash-can'
+import IconSearch from '~icons/carbon/search'
 import { useNotificationsStore } from '#src/stores/notificationsStore'
+import Fuse from 'fuse.js'
 
 defineComponent({
   name: 'IndexPage',
@@ -19,12 +21,7 @@ const notificationsStore = useNotificationsStore()
 const isLoading = ref(false)
 
 const files = ref<File[]>()
-
-// const contentType = computed(() => {
-//   return config.content_types?.find(
-//     (content) => content.name === contentTypeName,
-//   )
-// })
+const filterValue = ref('')
 
 function getFileTitle(item: File) {
   const parsedName = parse(item.name)
@@ -107,6 +104,36 @@ async function deleteFiles() {
   })
 }
 
+const fuse = new Fuse([] as File[], {
+  keys: ['path'] satisfies (keyof File)[],
+})
+
+const filteredFiles = ref<File[] | undefined>()
+
+const filesToDisplay = computed(() => {
+  const _files = filteredFiles.value ?? files.value ?? []
+
+  return _files.map((item) => ({
+    ...item,
+    file_title: getFileTitle(item),
+  }))
+})
+
+function resetFilter() {
+  filteredFiles.value = undefined
+}
+
+function filterFiles() {
+  if (!filterValue.value) {
+    resetFilter()
+    return
+  }
+
+  fuse.setCollection(files.value ?? [])
+  const results = fuse.search(filterValue.value)
+  filteredFiles.value = results.map((item) => item.item)
+}
+
 onMounted(async () => {
   init()
 })
@@ -128,9 +155,9 @@ watch(contentTypeName, () => {
     <template v-else>
       <h1 class="capitalize font-bold text-3xl">{{ contentTypeName }}</h1>
 
-      <div class="flex flex-wrap gap-5">
+      <div class="flex flex-wrap gap-5 mt-5">
         <router-link
-          class="btn mt-5 btn-primary w-max"
+          class="btn btn-primary w-max"
           :to="`/content-type/${contentTypeName}/file/new`"
         >
           <IconAdd
@@ -141,7 +168,7 @@ watch(contentTypeName, () => {
         </router-link>
 
         <button
-          class="btn mt-5 btn-secondary w-max"
+          class="btn btn-secondary w-max"
           :to="`/content-type/${contentTypeName}/file/new`"
           :disabled="selectedFiles.length === 0"
           v-on:click="deleteFiles"
@@ -152,14 +179,41 @@ watch(contentTypeName, () => {
           ></IconDelete>
           Delete selected files
         </button>
+
+        <form
+          role="search"
+          class="w-full max-w-xs ml-auto relative"
+          v-on:submit.prevent="filterFiles"
+        >
+          <span
+            aria-hidden="true"
+            class="absolute h-full right-3 flex items-center pointer-events-none"
+          >
+            <IconSearch class=""></IconSearch>
+          </span>
+
+          <input
+            v-model="filterValue"
+            type="search"
+            class="mt-0 pr-11"
+            placeholder="Filter displayed files..."
+            aria-label="Filter displayed files..."
+            v-on:search="
+              () => {
+                // Event fired when searching or clicking on the 'x'
+                if (!filterValue) {
+                  resetFilter()
+                  return
+                }
+              }
+            "
+          />
+        </form>
       </div>
 
       <ul class="mt-5 grid grid-cols-3 gap-5">
         <li
-          v-for="file in files?.map((item) => ({
-            ...item,
-            file_title: getFileTitle(item),
-          })) ?? []"
+          v-for="file in filesToDisplay"
           :key="`content-file-${file.path}`"
           class="flex items-center"
         >

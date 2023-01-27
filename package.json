@@ -29,6 +29,7 @@
     "@types/markdown-it": "^12.2.3",
     "@vueuse/core": "^9.10.0",
     "date-fns": "^2.29.3",
+    "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
     "markdown-it": "^13.0.1",
     "markdown-it-front-matter": "^0.2.3",

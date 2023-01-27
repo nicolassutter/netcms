@@ -4,9 +4,10 @@
 - Implement missing fields
   - media
   - rich
+- Add new field types
+  - boolean (checkboxes)
 - Make hooks page pretty
 - Display things on home page
-- Implement filtering / searching files
 - BUG:
     1. Update a file
     2. Once done, update it a secode time without refreshing the page
