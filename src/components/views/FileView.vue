@@ -2,12 +2,7 @@
 import BaseField from '#src/components/BaseField.vue'
 import { createFile, readFile, updateFile } from '#src/modules/api'
 import { config } from '#src/modules/config'
-import type { SingleFile, ContentType, AnyField } from '#types/index'
-import {
-  TextFieldSchema,
-  MediaFieldSchema,
-  SelectFieldSchema,
-} from '#types/index'
+import type { SingleFile, ContentType } from '#types/index'
 import { isEqual } from 'lodash-es'
 import type { JsonObject } from 'type-fest'
 import { parse, stringify as stringifyToYaml } from 'yaml'
@@ -73,56 +68,10 @@ function initEmptyFields() {
       return
     }
 
-    let schema
-
-    /**
-     * Define the schema corresponding to the field
-     */
-    if (
-      field.type === 'text' ||
-      field.type === 'email' ||
-      field.type === 'rich'
-    ) {
-      schema = TextFieldSchema
-    } else if (field.type === 'media') {
-      schema = MediaFieldSchema
-    } else if (field.type === 'select') {
-      schema = SelectFieldSchema
-    } else {
-      router.push('/')
-
-      notificationsStore.add({
-        content: `The specified field type for "${field.name}" is not valid.`,
-        status: 'error',
-      })
-
-      break
-    }
-
-    let parsedField: AnyField
-
-    /**
-     * Parsing the field
-     */
-    const res = schema.safeParse(field)
-
-    if (res.success) {
-      parsedField = res.data
-    } else {
-      router.push('/')
-
-      notificationsStore.add({
-        content: `The specified field "${field.name}" is not correctly defined.`,
-        status: 'error',
-      })
-
-      break
-    }
-
     // If the field does not exist yet, initialize it
-    if (!(parsedField.name in writableContent.value)) {
+    if (!(field.name in writableContent.value)) {
       writableContent.value[field.name] =
-        'default' in parsedField ? parsedField.default ?? null : null
+        'default' in field ? field.default ?? null : null
     }
   }
 }
@@ -289,8 +238,7 @@ const { header } = useHeader()
           <BaseField
             :id="`field-${field.name}`"
             v-model="writableContent[field.name]"
-            :type="field.type"
-            :name="field.name"
+            :field="field"
           ></BaseField>
         </template>
       </div>
