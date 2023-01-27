@@ -1,3 +1,14 @@
 # Todos
 
 - Fix tab sequence when navigating the site
+- Implement missing fields
+  - media
+  - rich
+- Make hooks page pretty
+- Display things on home page
+- Implement deleting a file (or multiple)
+- Implement filtering / searching files
+- BUG:
+    1. Update a file
+    2. Once done, update it a secode time without refreshing the page
+    3. API error -> git conflict -> probably a sha problem that should be updated after first update
