@@ -26,17 +26,9 @@ const model = computed({
 
 <template>
   <input
-    v-if="field.type === 'text'"
+    v-if="field.type === 'text' || field.type === 'email'"
     v-model="model"
-    type="text"
-    class=""
-    v-bind="{ id }"
-  />
-
-  <input
-    v-else-if="field.type === 'email'"
-    v-model="model"
-    type="email"
+    :type="field.type"
     v-bind="{ id }"
   />
 
