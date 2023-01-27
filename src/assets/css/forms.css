@@ -2,7 +2,7 @@ label {
   @apply block font-semibold;
 }
 
-input,
+input:not(:where([type="checkbox"], [type="radio"])),
 textarea,
 select {
   @apply rounded-md p-2 bg-base-100;
@@ -13,6 +13,15 @@ select {
 
   &:focus{
     @apply ring-2 ring-accent-focus outline-none;
+  }
+}
+
+input[type="checkbox"] {
+  @apply appearance-none w-5 h-5 bg-base-100 rounded transition-colors;
+
+  &:checked {
+    @apply bg-primary bg-no-repeat bg-center;
+    background-image: url("https://api.iconify.design/carbon:checkmark.svg?color=white");
   }
 }
 
