@@ -154,6 +154,10 @@ export async function listContent(contentType: string) {
           `/git/github/contents${appendSlash(content_dir)}`,
           {
             method: 'GET',
+            params: {
+              // Hack to disable cache
+              d: new Date().getTime(),
+            },
           },
         )) ?? []
       )
