@@ -6,7 +6,6 @@
   - rich
 - Make hooks page pretty
 - Display things on home page
-- Implement deleting a file (or multiple)
 - Implement filtering / searching files
 - BUG:
     1. Update a file

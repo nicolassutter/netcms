@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { listContent } from '#src/modules/api'
+import { deleteFile, listContent } from '#src/modules/api'
 // import { config } from '#src/modules/config'
 import { parse } from 'path-browserify'
 import type { File } from '#types/index'
 import IconAdd from '~icons/carbon/add'
 import IconArrowRight from '~icons/carbon/arrow-right'
+import IconDelete from '~icons/carbon/trash-can'
 import { useNotificationsStore } from '#src/stores/notificationsStore'
 
 defineComponent({
@@ -29,6 +30,8 @@ function getFileTitle(item: File) {
   const parsedName = parse(item.name)
   return `${parsedName.name}`
 }
+
+const selectedFiles = ref<File[]>([])
 
 async function init() {
   if (typeof contentTypeName.value !== 'string') {
@@ -64,6 +67,46 @@ async function init() {
   }
 }
 
+/**
+ * Delete selected files serially,
+ * it will not work if done in parallel.
+ */
+async function deleteFiles() {
+  const pathsToDelete: string[] = []
+  let hasError = false
+
+  for await (const file of selectedFiles.value) {
+    try {
+      await deleteFile({
+        message: `chore: delete file "${file.path}"`,
+        path: file.path,
+        sha: file.sha,
+      })
+
+      pathsToDelete.push(file.path)
+    } catch (error) {
+      hasError = true
+
+      notificationsStore.add({
+        content: `The file "${file.path}" could not be deleted`,
+        status: 'error',
+      })
+    }
+  }
+
+  // Update state
+  selectedFiles.value = selectedFiles.value.filter(
+    (file) => !pathsToDelete.includes(file.path),
+  )
+
+  notificationsStore.add({
+    content: hasError
+      ? 'Some of your files have been deleted.'
+      : 'Your files have been deleted.',
+    status: 'success',
+  })
+}
+
 onMounted(async () => {
   init()
 })
@@ -85,26 +128,70 @@ watch(contentTypeName, () => {
     <template v-else>
       <h1 class="capitalize font-bold text-3xl">{{ contentTypeName }}</h1>
 
-      <router-link
-        class="btn mt-5 btn-primary w-max"
-        :to="`/content-type/${contentTypeName}/file/new`"
-      >
-        <IconAdd class="mr-2"></IconAdd>
-        Create new "{{ contentTypeName }}"
-      </router-link>
-
-      <ul class="mt-5 grid grid-cols-3">
-        <li
-          v-for="file in files ?? []"
-          :key="`content-file-${file.sha}`"
+      <div class="flex flex-wrap gap-5">
+        <router-link
+          class="btn mt-5 btn-primary w-max"
+          :to="`/content-type/${contentTypeName}/file/new`"
         >
+          <IconAdd
+            aria-hidden="true"
+            class="mr-2"
+          ></IconAdd>
+          Create new "{{ contentTypeName }}"
+        </router-link>
+
+        <button
+          class="btn mt-5 btn-secondary w-max"
+          :to="`/content-type/${contentTypeName}/file/new`"
+          :disabled="selectedFiles.length === 0"
+          v-on:click="deleteFiles"
+        >
+          <IconDelete
+            aria-hidden="true"
+            class="mr-2"
+          ></IconDelete>
+          Delete selected files
+        </button>
+      </div>
+
+      <ul class="mt-5 grid grid-cols-3 gap-5">
+        <li
+          v-for="file in files?.map((item) => ({
+            ...item,
+            file_title: getFileTitle(item),
+          })) ?? []"
+          :key="`content-file-${file.path}`"
+          class="flex items-center"
+        >
+          <label
+            :for="`file-${file.path}`"
+            class="sr-only"
+          >
+            Add file named "{{ file.file_title }}" to selection
+          </label>
+
+          <input
+            :id="`file-${file.path}`"
+            type="checkbox"
+            class="mr-2"
+            v-on:change="
+              ({ target }) => {
+                if ((target as HTMLInputElement).checked) {
+                  selectedFiles.push(file)
+                } else {
+                  selectedFiles = selectedFiles.filter(selectedFile => selectedFile.path !== file.path)
+                }
+              }
+            "
+          />
+
           <router-link
             :to="`/content-type/${contentTypeName}/file?path=${file.path}`"
             class="capitalize w-full flex items-center bg-neutral hover:bg-neutral-focus p-3 rounded-md transition-colors"
           >
             <span class="sr-only">Edit the file named </span>
 
-            {{ getFileTitle(file) }}
+            {{ file.file_title }}
 
             <IconArrowRight
               class="ml-auto"
