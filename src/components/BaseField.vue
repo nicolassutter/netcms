@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import type { FieldType } from '#types/index'
+import type { AnyField } from '#types/index'
+import IconDown from '~icons/carbon/caret-down'
 
 const props = defineProps<{
-  type: FieldType
+  field: AnyField
   modelValue: any
-  name: string
+  id: string
 }>()
 
 const emit = defineEmits<{
@@ -25,20 +26,45 @@ const model = computed({
 
 <template>
   <input
-    v-if="type === 'text'"
+    v-if="field.type === 'text'"
     v-model="model"
     type="text"
     class=""
+    v-bind="{ id }"
   />
 
   <input
-    v-else-if="type === 'email'"
+    v-else-if="field.type === 'email'"
     v-model="model"
     type="email"
+    v-bind="{ id }"
   />
 
   <textarea
-    v-else-if="type === 'rich'"
+    v-else-if="field.type === 'rich'"
     v-model="model"
+    v-bind="{ id }"
   ></textarea>
+
+  <div
+    v-else-if="field.type === 'select'"
+    class="relative"
+  >
+    <span class="absolute right-3 bottom-0 top-0 flex items-center">
+      <IconDown></IconDown>
+    </span>
+
+    <select
+      v-model="model"
+      v-bind="{ id }"
+    >
+      <option
+        v-for="option in field.params.options"
+        :key="`option-${option.label}-${option.value}`"
+        :value="option.value"
+      >
+        {{ option.label }}
+      </option>
+    </select>
+  </div>
 </template>

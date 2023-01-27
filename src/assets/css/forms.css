@@ -2,7 +2,9 @@ label {
   @apply block font-semibold;
 }
 
-input, textarea {
+input,
+textarea,
+select {
   @apply rounded-md p-2 bg-base-100;
   @apply block w-full appearance-none;
   @apply mt-2;
