@@ -47,10 +47,7 @@ export function field<T extends FieldType>(
 export async function init(config: Config) {
   try {
     // Will throw if config is incorrect
-    // FIXME: `params` does not get parsed correctly because of `.or()`
     const parsedConfig = ConfigSchema.parse(config)
-
-    console.log(parsedConfig)
 
     entries(parsedConfig).forEach(
       ([key, value]) => (pluginConfig[key] = value as any),

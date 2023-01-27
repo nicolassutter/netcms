@@ -13,7 +13,6 @@ export const FieldTypeSchema = z.enum([
 export const FieldSchema = z.object({
   label: z.string().optional(),
   name: z.string(),
-  type: FieldTypeSchema,
 })
 
 export const SelectOptionSchema = z.object({
@@ -25,6 +24,7 @@ export const TextFieldSchema = z
   .object({
     params: z.object({}).optional(),
     default: z.string().default('').optional(),
+    type: z.literal('text' satisfies FieldType),
   })
   .merge(FieldSchema)
 
@@ -32,6 +32,7 @@ export const EmailFieldSchema = z
   .object({
     params: z.object({}).optional(),
     default: z.string().default('').optional(),
+    type: z.literal('email' satisfies FieldType),
   })
   .merge(FieldSchema)
 
@@ -39,6 +40,7 @@ export const RichFieldSchema = z
   .object({
     params: z.object({}).optional(),
     default: z.string().default('').optional(),
+    type: z.literal('rich' satisfies FieldType),
   })
   .merge(FieldSchema)
 
@@ -47,6 +49,7 @@ export const MediaFieldSchema = z
     params: z.object({
       accept: z.array(z.string()),
     }),
+    type: z.literal('media' satisfies FieldType),
   })
   .merge(FieldSchema)
 
@@ -57,13 +60,20 @@ export const SelectFieldSchema = z
       multiple: z.boolean().default(false).optional(),
     }),
     default: z.string().default('').optional(),
+    type: z.literal('select' satisfies FieldType),
   })
   .merge(FieldSchema)
 
-export const AnyFieldSchema = TextFieldSchema.or(EmailFieldSchema)
-  .or(SelectFieldSchema)
-  .or(RichFieldSchema)
-  .or(MediaFieldSchema)
+/**
+ * @see https://zod.dev/?id=discriminated-unions
+ */
+export const AnyFieldSchema = z.discriminatedUnion('type', [
+  TextFieldSchema,
+  EmailFieldSchema,
+  SelectFieldSchema,
+  RichFieldSchema,
+  MediaFieldSchema,
+])
 
 const ContentTypeSchema = z.object({
   name: z.string(),
@@ -111,9 +121,13 @@ export type Hook = z.infer<typeof HookSchema>
 export type Config = z.infer<typeof ConfigSchema>
 
 export type FieldsMap = {
-  text: TextField
-  email: EmailField
-  select: SelectField
-  rich: RichField
-  media: MediaField
+  [K in keyof typeof fieldsMap]: z.infer<(typeof fieldsMap)[K]>
 }
+
+export const fieldsMap = {
+  text: TextFieldSchema,
+  email: EmailFieldSchema,
+  select: SelectFieldSchema,
+  rich: RichFieldSchema,
+  media: MediaFieldSchema,
+} satisfies Record<FieldType, unknown>
