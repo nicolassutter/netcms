@@ -22,6 +22,7 @@ const { header } = useHeader()
 
 type Link =
   | {
+      tag: string
       label: string
       // any icon type is fine, it just need to be made non reactive for vue
       icon: Raw<typeof IconHome>
@@ -33,6 +34,7 @@ type Link =
 
 const links = computed<Link[]>(() => [
   {
+    tag: 'router-link',
     label: 'Home',
     icon: markRaw(IconHome),
     props: {
@@ -40,6 +42,7 @@ const links = computed<Link[]>(() => [
     },
   },
   {
+    tag: 'router-link',
     label: 'Hooks',
     icon: markRaw(IconRocket),
     props: {
@@ -48,6 +51,7 @@ const links = computed<Link[]>(() => [
   },
   config.site_url
     ? {
+        tag: 'a',
         label: 'View site',
         icon: markRaw(IconWeb),
         classes: 'ml-auto',
@@ -60,6 +64,7 @@ const links = computed<Link[]>(() => [
     : undefined,
   userStore.isLogged
     ? {
+        tag: 'button',
         label: 'Logout',
         icon: markRaw(IconLogout),
         events: {
@@ -79,12 +84,35 @@ const filteredLinks = computed(
 
 <template>
   <div class="bg-base h-full">
+    <nav
+      role="navigation"
+      class="skip-links"
+    >
+      <ul class="p-2">
+        <li>
+          <a
+            class="block p-2 rounded"
+            href="#main"
+            >Go to main content</a
+          >
+        </li>
+      </ul>
+    </nav>
+
     <NotificationsContainer
       class="fixed top-0 right-0"
     ></NotificationsContainer>
 
     <!-- Auth is a fullpage view -->
-    <router-view v-if="route.path === '/auth'"></router-view>
+    <main
+      v-if="route.path === '/auth'"
+      id="main"
+      role="main"
+      tabindex="-1"
+      class="h-full w-full"
+    >
+      <router-view></router-view>
+    </main>
 
     <div
       v-else
@@ -102,9 +130,7 @@ const filteredLinks = computed(
             :class="link.classes"
           >
             <component
-              :is="
-                link.props ? (link.props.href ? 'a' : 'router-link') : 'button'
-              "
+              :is="link.tag"
               v-bind="link.props"
               class="flex btn items-center hover:text-accent hover:bg-base-100"
               v-on="link.events ?? {}"
@@ -118,15 +144,31 @@ const filteredLinks = computed(
 
       <SideBar class="col-start-1 row-start-2"></SideBar>
 
-      <main class="app-content-grid col-start-2 row-start-2">
+      <main
+        id="main"
+        role="main"
+        tabindex="-1"
+        class="app-content-grid col-start-2 row-start-2"
+      >
         <router-view></router-view>
       </main>
     </div>
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="pcss">
 .router-link-active {
   @apply bg-base-100 text-accent;
+}
+
+.skip-links {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+
+  &:focus-within {
+    opacity: 1;
+    height: auto;
+  }
 }
 </style>
