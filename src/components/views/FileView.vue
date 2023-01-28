@@ -131,12 +131,18 @@ async function publish() {
     )
   } else if (file.value?.path) {
     try {
-      await updateFile({
+      const updateResponse = await updateFile({
         content: newContent,
         message: `chore: update file "${file.value?.path}"`,
         path: file.value?.path,
         sha: file.value?.sha,
       })
+
+      // Update the file metadata (most importantly its sha)
+      file.value = {
+        ...file.value,
+        ...updateResponse.content,
+      }
 
       // The old content becomes the new one
       content.value = JSON.parse(JSON.stringify(writableContent.value))

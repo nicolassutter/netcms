@@ -18,17 +18,17 @@ export interface Links {
 }
 
 export interface SingleFile {
-  type: string
-  encoding: string
-  size: number
   name: string
   path: string
-  content: string
   sha: string
+  size: number
   url: string
-  git_url: string
   html_url: string
+  git_url: string
   download_url: string
+  type: string
+  encoding: string
+  content: string
   _links: Links
 }
 
