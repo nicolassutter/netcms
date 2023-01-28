@@ -139,7 +139,14 @@ onMounted(async () => {
 })
 
 watch(contentTypeName, () => {
-  init()
+  /**
+   * Only if we are still on this view,
+   * for example if we enter another view the watcher gets triggered
+   * even though it is useles since we are on a new route.
+   */
+  if (route.path.includes('/content-type')) {
+    init()
+  }
 })
 </script>
 
