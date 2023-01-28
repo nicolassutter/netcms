@@ -217,6 +217,8 @@ const { header } = useHeader()
       <ul class="flex items-center h-full ml-5">
         <li class="ml-auto">
           <button
+            form="file-view-form"
+            type="submit"
             class="btn bg-primary hover:not-disabled:bg-primary-focus"
             :disabled="!contentHasChanged"
             v-on:click="publish"
@@ -230,7 +232,11 @@ const { header } = useHeader()
     <div class="app-content-grid pt-5">
       <h1 class="capitalize font-bold text-3xl">{{ newFileTitle }}</h1>
 
-      <div class="form max-w-xl mt-10">
+      <form
+        id="file-view-form"
+        class="form max-w-xl mt-10"
+        aria-label="File edition form"
+      >
         <template
           v-for="field in contentType?.fields"
           :key="`field-${contentType.name}-${field.name}`"
@@ -247,7 +253,7 @@ const { header } = useHeader()
             :field="field"
           ></BaseField>
         </template>
-      </div>
+      </form>
     </div>
   </div>
 </template>
