@@ -3,10 +3,14 @@ import { v4 as uuid } from 'uuid'
 import { config } from '#src/modules/config'
 import type { Hook } from '#types/index'
 import { $fetch } from 'ohmyfetch'
+import IconRocket from '~icons/carbon/rocket'
+import { useNotificationsStore } from '#src/stores/notificationsStore'
 
 defineComponent({
   name: 'HooksPage',
 })
+
+const notificationsStore = useNotificationsStore()
 
 const hooks = computed(
   () =>
@@ -23,32 +27,46 @@ async function tryHook(hook: Hook) {
     }
 
     await $fetch(hook.url)
-    // TODO: diplay success toast
+
+    notificationsStore.add({
+      content: `The ${hook.name} hook was successfully triggered.`,
+      status: 'success',
+    })
   } catch (error) {
-    // TODO: Handle error
+    notificationsStore.add({
+      content: `The ${hook.name} hook could not be triggered.`,
+      status: 'error',
+    })
   }
 }
 </script>
 
 <template>
-  <div class="hooks-page">
-    <h2>Hooks</h2>
+  <div class="hooks-page mt-5">
+    <h1 class="capitalize font-bold text-3xl">Hooks</h1>
 
-    <table class="mt-5">
+    <table class="mt-5 max-w-xl">
       <tr>
-        <th>Hook</th>
+        <th><span class="sr-only">Hook number</span></th>
+        <th>Hook name</th>
         <th>Hook description</th>
       </tr>
 
       <tr
-        v-for="hook in hooks"
+        v-for="(hook, index) in hooks"
         :key="hook.id"
       >
+        <td>{{ index + 1 }}</td>
+
         <td>
           <button
-            class="btn btn-secondary"
+            class="btn btn-secondary flex items-center"
             v-on:click="tryHook(hook)"
           >
+            <IconRocket
+              aria-hidden="true"
+              class="mr-2"
+            ></IconRocket>
             {{ hook.name }}
           </button>
         </td>

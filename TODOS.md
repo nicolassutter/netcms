@@ -4,5 +4,4 @@
 - Implement missing fields
   - media
   - rich
-- Make hooks page pretty
 - Display things on home page

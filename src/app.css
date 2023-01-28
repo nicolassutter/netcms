@@ -22,3 +22,19 @@ body {
     grid-column: 2;
   }
 }
+
+table {
+  @apply w-full;
+
+  & th {
+    @apply bg-neutral first:rounded-tl-md last:rounded-tr-md;
+  }
+
+  & :where(th, td) {
+    @apply p-3 text-left;
+  }
+
+  & td {
+    @apply border-b border-neutral;
+  }
+}
