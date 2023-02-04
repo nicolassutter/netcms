@@ -38,3 +38,7 @@ table {
     @apply border-b border-neutral;
   }
 }
+
+#modal-root {
+  @apply fixed top-0 left-0;
+}

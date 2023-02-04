@@ -2,7 +2,7 @@
 import { deleteFile, listContent } from '#src/modules/api'
 // import { config } from '#src/modules/config'
 import { parse } from 'path-browserify'
-import type { File } from '#types/index'
+import type { GithubFile } from '#types/index'
 import IconAdd from '~icons/carbon/add'
 import IconArrowRight from '~icons/carbon/arrow-right'
 import IconDelete from '~icons/carbon/trash-can'
@@ -20,15 +20,15 @@ const contentTypeName = computed(() => route.params.contentType)
 const notificationsStore = useNotificationsStore()
 const isLoading = ref(false)
 
-const files = ref<File[]>()
+const files = ref<GithubFile[]>()
 const filterValue = ref('')
 
-function getFileTitle(item: File) {
+function getFileTitle(item: GithubFile) {
   const parsedName = parse(item.name)
   return `${parsedName.name}`
 }
 
-const selectedFiles = ref<File[]>([])
+const selectedFiles = ref<GithubFile[]>([])
 
 async function init() {
   if (typeof contentTypeName.value !== 'string') {
@@ -104,11 +104,11 @@ async function deleteFiles() {
   })
 }
 
-const fuse = new Fuse([] as File[], {
-  keys: ['path'] satisfies (keyof File)[],
+const fuse = new Fuse([] as GithubFile[], {
+  keys: ['path'] satisfies (keyof GithubFile)[],
 })
 
-const filteredFiles = ref<File[] | undefined>()
+const filteredFiles = ref<GithubFile[] | undefined>()
 
 const filesToDisplay = computed(() => {
   const _files = filteredFiles.value ?? files.value ?? []

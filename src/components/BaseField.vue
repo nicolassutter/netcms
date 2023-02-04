@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import type { AnyField } from '#types/index'
+import type { AnyField, GithubFile } from '#types/index'
+import { GithubFileSchema } from '#types/index'
 import IconDown from '~icons/carbon/caret-down'
+import MediaLibraryModal from '#src/components/MediaLibraryModal.vue'
+import ModalOverlay from '#src/components/ModalOverlay.vue'
 
 const props = defineProps<{
   field: AnyField
@@ -13,6 +16,14 @@ const emit = defineEmits<{
   (e: ''): void
 }>()
 
+function isGithubFile(param: unknown): param is GithubFile {
+  try {
+    return Boolean(GithubFileSchema.parse(props.modelValue))
+  } catch (error) {
+    return false
+  }
+}
+
 const model = computed({
   get() {
     return props.modelValue
@@ -22,6 +33,34 @@ const model = computed({
     emit('update:modelValue', v)
   },
 })
+
+function isFile(param: unknown): param is File {
+  return typeof File !== 'undefined' && param instanceof File
+}
+
+const isImg = computed(() => {
+  if (!isFile(model.value) && !isGithubFile(model.value)) {
+    return false
+  }
+
+  return ['.jpeg', '.jpg', '.png', '.ico', '.svg'].some((ext) =>
+    model.value.name.includes(ext),
+  )
+})
+
+const imagePreview = computed(() => {
+  if (!isImg.value) {
+    return undefined
+  }
+
+  if (isGithubFile(model.value)) {
+    return model.value.download_url
+  }
+
+  return URL.createObjectURL(model.value)
+})
+
+const isLibraryOpened = ref(false)
 </script>
 
 <template>
@@ -43,6 +82,44 @@ const model = computed({
     v-model="model"
     type="checkbox"
   />
+
+  <template v-else-if="field.type === 'media'">
+    <button
+      type="button"
+      class="btn btn-primary"
+      v-on:click="() => (isLibraryOpened = true)"
+    >
+      Choose asset
+    </button>
+
+    <Teleport
+      v-if="isLibraryOpened"
+      to="#modal-root"
+    >
+      <ModalOverlay v-on:close="() => (isLibraryOpened = false)">
+        <MediaLibraryModal
+          :multiple="false"
+          v-on:submit="
+            (selectedAssets) => {
+              isLibraryOpened = false
+              model = selectedAssets[0]
+            }
+          "
+          v-on:close="() => (isLibraryOpened = false)"
+        ></MediaLibraryModal>
+      </ModalOverlay>
+    </Teleport>
+
+    <div
+      v-if="imagePreview"
+      class="mt-5"
+    >
+      <img
+        :src="imagePreview"
+        alt=""
+      />
+    </div>
+  </template>
 
   <div
     v-else-if="field.type === 'select'"

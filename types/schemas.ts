@@ -64,7 +64,7 @@ export const RichFieldSchema = z
 export const MediaFieldSchema = z
   .object({
     params: z.object({
-      accept: z.array(z.string()),
+      accept: z.string(),
     }),
     type: z.literal('media' satisfies FieldType),
   })
@@ -124,6 +124,18 @@ export const ConfigSchema = z.object({
   hooks: z.array(HookSchema).optional(),
 })
 
+export const GithubFileSchema = z.object({
+  name: z.string(),
+  path: z.string(),
+  sha: z.string(),
+  size: z.number(),
+  url: z.string(),
+  html_url: z.string(),
+  git_url: z.string(),
+  download_url: z.string(),
+  type: z.string(),
+})
+
 export type Format = z.input<typeof FormatSchema>
 export type FieldType = z.input<typeof FieldTypeSchema>
 export type SelectOption = z.input<typeof SelectOptionSchema>
@@ -138,6 +150,8 @@ export type AnyField = z.input<typeof AnyFieldSchema>
 export type ContentType = z.input<typeof ContentTypeSchema>
 export type Hook = z.input<typeof HookSchema>
 export type Config = z.input<typeof ConfigSchema>
+
+export type GithubFile = z.input<typeof GithubFileSchema>
 
 export type FieldsMap = {
   [K in keyof typeof fieldsMap]: z.input<(typeof fieldsMap)[K]>

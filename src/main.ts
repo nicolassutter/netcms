@@ -44,6 +44,13 @@ const config = defineConfig({
           name: 'check_field',
           label: 'check field',
         }),
+        field('media', {
+          name: 'thumbnail',
+          params: {
+            accept: '.png,.jpg,.svg,.ico,.docx,.csv,.mp4,.mkv,.md,.txt,.pdf',
+          },
+          label: 'Thumbnail',
+        }),
       ],
     },
   ],

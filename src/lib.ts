@@ -53,6 +53,10 @@ export async function init(config: Config) {
       ([key, value]) => (pluginConfig[key] = value as any),
     )
 
+    const modalRoot = document.createElement('div')
+    modalRoot.setAttribute('id', 'modal-root')
+    document.body.appendChild(modalRoot)
+
     createApp(App).use(pinia).use(router).mount('#app')
   } catch (error) {
     /* eslint-disable-next-line */

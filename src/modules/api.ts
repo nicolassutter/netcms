@@ -1,7 +1,7 @@
 import { router } from '#src/router'
 import { useNotificationsStore } from '#src/stores/notificationsStore'
 import { appendSlash, call } from '#src/utils/utils'
-import type { CreateFileResponse, File, SingleFile } from '#types/index'
+import type { CreateFileResponse, GithubFile, SingleFile } from '#types/index'
 import { $fetch } from 'ohmyfetch'
 import { netlifyIdentity } from './auth'
 import { config, extensions } from './config'
@@ -59,6 +59,7 @@ export async function createFile(options: {
   path: string
   content: string
   message: string
+  isAlreadyBase64?: boolean
 }) {
   return await authenticatedApi.$fetch<CreateFileResponse>(
     `/git/github/contents${appendSlash(options.path)}`,
@@ -67,7 +68,9 @@ export async function createFile(options: {
       body: {
         message: options.message,
         committer: config.committer,
-        content: btoa(options.content),
+        content: options.isAlreadyBase64
+          ? options.content
+          : btoa(options.content),
       },
     },
   )
@@ -138,6 +141,34 @@ export async function readFile(path: string) {
 }
 
 /**
+ * Gets all the available assets
+ */
+export async function listAssets() {
+  const assets_dir = config.assets_dir ?? 'assets'
+
+  const files = await call(async () => {
+    try {
+      return (
+        (await authenticatedApi.$fetch<GithubFile[]>(
+          `/git/github/contents${appendSlash(assets_dir)}`,
+          {
+            method: 'GET',
+            params: {
+              // Hack to disable cache
+              d: new Date().getTime(),
+            },
+          },
+        )) ?? []
+      )
+    } catch (error) {
+      throw new Error('EASSETS404')
+    }
+  })
+
+  return files
+}
+
+/**
  * Gets all the available content for the given contentType
  */
 export async function listContent(contentType: string) {
@@ -150,7 +181,7 @@ export async function listContent(contentType: string) {
   const files = await call(async () => {
     try {
       return (
-        (await authenticatedApi.$fetch<File[]>(
+        (await authenticatedApi.$fetch<GithubFile[]>(
           `/git/github/contents${appendSlash(content_dir)}`,
           {
             method: 'GET',

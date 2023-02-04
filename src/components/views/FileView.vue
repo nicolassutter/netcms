@@ -90,20 +90,21 @@ async function publish() {
     return
   }
 
-  let newContent = JSON.stringify(writableContent.value)
+  let newStringifiedContent = JSON.stringify(writableContent.value)
+  const newContent = JSON.parse(newStringifiedContent)
 
   // json -> yml -> frontmatter
   if (ext === '.md') {
     // TODO: add the old markdown content after the frontmatter
     const mdContent = ''
-    newContent = `---\n${stringifyToYaml(
+    newStringifiedContent = `---\n${stringifyToYaml(
       writableContent.value,
     )}\n---${mdContent}`
   }
 
   // json -> yml
   if (ext === '.yml') {
-    newContent = stringifyToYaml(writableContent.value)
+    newStringifiedContent = stringifyToYaml(newContent)
   }
 
   const exists = Boolean(file.value?.sha)
@@ -120,7 +121,7 @@ async function publish() {
     )}${ext}`
 
     const createdFile = await createFile({
-      content: newContent,
+      content: newStringifiedContent,
       message: `feat: add file "${path}"`,
       path,
     })
@@ -132,7 +133,7 @@ async function publish() {
   } else if (file.value?.path) {
     try {
       const updateResponse = await updateFile({
-        content: newContent,
+        content: newStringifiedContent,
         message: `chore: update file "${file.value?.path}"`,
         path: file.value?.path,
         sha: file.value?.sha,
@@ -236,6 +237,7 @@ const { header } = useHeader()
         id="file-view-form"
         class="form max-w-xl mt-10"
         aria-label="File edition form"
+        v-on:submit.prevent
       >
         <template
           v-for="field in contentType?.fields"

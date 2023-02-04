@@ -3,7 +3,6 @@ export type {
   Commit,
   Content,
   CreateFileResponse,
-  File,
   Links,
   Parent,
   SingleFile,
