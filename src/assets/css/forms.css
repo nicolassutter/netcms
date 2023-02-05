@@ -2,9 +2,11 @@ label {
   @apply block font-semibold;
 }
 
-input:not(:where([type="checkbox"], [type="radio"])),
-textarea,
-select {
+:is(
+  input:not(:where([type="checkbox"], [type="radio"])),
+  textarea,
+  select
+) {
   @apply rounded-md p-2 bg-base-100;
   @apply block w-full appearance-none;
   @apply mt-2;
@@ -16,8 +18,15 @@ select {
   }
 }
 
-input[type="checkbox"] {
+:where(
+  input[type="checkbox"],
+  input[type="radio"]
+) {
   @apply appearance-none w-5 h-5 bg-base-100 rounded transition-colors mt-2;
+
+  &[type="radio"] {
+    @apply rounded-full;
+  }
 
   &:checked {
     @apply bg-primary bg-no-repeat bg-center;
