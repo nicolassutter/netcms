@@ -65,7 +65,7 @@ async function uploadAsset(asset: File) {
   })
 
   const { content } = await createFile({
-    content: base64AssetContent.replace(/^data:image\/.+;base64,/m, ''),
+    content: base64AssetContent.replace(/^data:\w+\/\w+;base64,/m, ''),
     message: `chore: add asset "${asset.name}"`,
     path: join(config.assets_dir ?? 'assets', asset.name),
     isAlreadyBase64: true,
