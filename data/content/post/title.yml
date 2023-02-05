@@ -1,2 +1,5 @@
 title: The title
-body: The post body
+body: <p>The post that changed</p>
+status: pending
+check_field: true
+thumbnail: null
