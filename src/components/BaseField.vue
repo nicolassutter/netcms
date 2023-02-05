@@ -4,6 +4,7 @@ import { GithubFileSchema } from '#types/index'
 import IconDown from '~icons/carbon/caret-down'
 import MediaLibraryModal from '#src/components/MediaLibraryModal.vue'
 import ModalOverlay from '#src/components/ModalOverlay.vue'
+import IconDocument from '~icons/carbon/document'
 
 const props = defineProps<{
   field: AnyField
@@ -86,7 +87,7 @@ const isLibraryOpened = ref(false)
   <template v-else-if="field.type === 'media'">
     <button
       type="button"
-      class="btn btn-primary"
+      class="btn btn-primary mt-2"
       v-on:click="() => (isLibraryOpened = true)"
     >
       Choose asset
@@ -110,6 +111,8 @@ const isLibraryOpened = ref(false)
       </ModalOverlay>
     </Teleport>
 
+    <p class="mt-2">Selected asset: {{ model.name }}</p>
+
     <div
       v-if="imagePreview"
       class="mt-5"
@@ -119,6 +122,12 @@ const isLibraryOpened = ref(false)
         alt=""
       />
     </div>
+
+    <template v-else>
+      <div class="bg-base-100 rounded-md p-5 flex items-center justify-center">
+        <IconDocument class="w-10 h-10"></IconDocument>
+      </div>
+    </template>
   </template>
 
   <div

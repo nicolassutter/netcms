@@ -5,6 +5,7 @@ import { useNotificationsStore } from '#src/stores/notificationsStore'
 import type { GithubFile } from '#types/schemas'
 import { join } from 'path-browserify'
 import IconClose from '~icons/carbon/close'
+import IconDocument from '~icons/carbon/document'
 
 const notificationsStore = useNotificationsStore()
 const uid = uuid()
@@ -89,13 +90,23 @@ async function handleFile(event: Event) {
     })
 
     isLoading.value = true
-    await uploadAsset(file)
-    await init()
 
-    notificationsStore.add({
-      content: 'File successfully uploaded',
-      status: 'success',
-    })
+    try {
+      await uploadAsset(file)
+      await init()
+
+      notificationsStore.add({
+        content: 'File successfully uploaded',
+        status: 'success',
+      })
+    } catch (error) {
+      notificationsStore.add({
+        content: 'File could not be uploaded',
+        status: 'error',
+      })
+    } finally {
+      isLoading.value = false
+    }
   }
 }
 
@@ -123,11 +134,11 @@ onMounted(() => {
       v-else
       v-on:submit.prevent="submit"
     >
-      <div class="grid grid-cols-4">
+      <div class="grid grid-cols-4 gap-2">
         <article
           v-for="asset in assets"
           :key="`asset-${asset.path}`"
-          class="flex gap-2"
+          class="flex gap-2 bg-neutral p-2 rounded-md"
         >
           <div>
             <label
@@ -140,7 +151,7 @@ onMounted(() => {
               :id="`asset-input-${asset.name}`"
               :type="multiple ? 'checkbox' : 'radio'"
               :name="multiple ? undefined : 'asset-input'"
-              aria-label=""
+              class="mt-0"
               v-on:change="
               (event) => {
                 if ((event.target as HTMLInputElement).checked) {
@@ -158,7 +169,7 @@ onMounted(() => {
           </div>
 
           <div>
-            <h2>{{ asset.name }}</h2>
+            <h2 class="mb-2">{{ asset.name }}</h2>
 
             <template v-if="isImg(asset)">
               <img
@@ -166,6 +177,14 @@ onMounted(() => {
                 class="rounded-md"
                 alt=""
               />
+            </template>
+
+            <template v-else>
+              <div
+                class="bg-base-100 rounded-md p-5 flex items-center justify-center"
+              >
+                <IconDocument class="w-10 h-10"></IconDocument>
+              </div>
             </template>
           </div>
         </article>
