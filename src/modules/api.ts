@@ -1,7 +1,12 @@
 import { router } from '#src/router'
 import { useNotificationsStore } from '#src/stores/notificationsStore'
 import { appendSlash, call } from '#src/utils/utils'
-import type { CreateFileResponse, GithubFile, SingleFile } from '#types/index'
+import type {
+  CreateFileResponse,
+  GithubFile,
+  SingleFile,
+  Commit,
+} from '#types/index'
 import { $fetch } from 'ohmyfetch'
 import { netlifyIdentity } from './auth'
 import { config, extensions } from './config'
@@ -200,4 +205,23 @@ export async function listContent(contentType: string) {
   return files.filter((file) => {
     return !!extensions.find((ext) => file.path.endsWith(`.${ext}`))
   })
+}
+
+/**
+ * Gets the latest commits
+ */
+export async function listCommits() {
+  const commits = await authenticatedApi.$fetch<Commit[]>(
+    `/git/github/commits`,
+    {
+      method: 'GET',
+      params: {
+        // Hack to disable cache
+        d: new Date().getTime(),
+        per_page: 10,
+      },
+    },
+  )
+
+  return commits
 }
