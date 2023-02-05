@@ -5,6 +5,7 @@ import IconDown from '~icons/carbon/caret-down'
 import MediaLibraryModal from '#src/components/MediaLibraryModal.vue'
 import ModalOverlay from '#src/components/ModalOverlay.vue'
 import IconDocument from '~icons/carbon/document'
+import EditorBase from '#src/components/EditorBase.vue'
 
 const props = defineProps<{
   field: AnyField
@@ -66,22 +67,31 @@ const isLibraryOpened = ref(false)
 
 <template>
   <input
-    v-if="field.type === 'text' || field.type === 'email'"
+    v-if="
+      (field.type === 'text' && !field.params?.long) || field.type === 'email'
+    "
     v-model="model"
     :type="field.type"
     v-bind="{ id }"
   />
 
   <textarea
-    v-else-if="field.type === 'rich'"
+    v-else-if="field.type === 'text' && field.params?.long"
     v-model="model"
     v-bind="{ id }"
   ></textarea>
+
+  <template v-else-if="field.type === 'rich'">
+    <!-- v-model="model"
+    v-bind="{ id }" -->
+    <EditorBase v-model="model"></EditorBase>
+  </template>
 
   <input
     v-else-if="field.type === 'check'"
     v-model="model"
     type="checkbox"
+    v-bind="{ id }"
   />
 
   <template v-else-if="field.type === 'media'">
@@ -111,7 +121,12 @@ const isLibraryOpened = ref(false)
       </ModalOverlay>
     </Teleport>
 
-    <p class="mt-2">Selected asset: {{ model.name }}</p>
+    <p
+      v-if="model"
+      class="mt-2"
+    >
+      Selected asset: {{ model.name }}
+    </p>
 
     <div
       v-if="imagePreview"
@@ -123,11 +138,12 @@ const isLibraryOpened = ref(false)
       />
     </div>
 
-    <template v-else>
-      <div class="bg-base-100 rounded-md p-5 flex items-center justify-center">
-        <IconDocument class="w-10 h-10"></IconDocument>
-      </div>
-    </template>
+    <div
+      v-else-if="model"
+      class="bg-base-100 mt-5 rounded-md p-5 flex items-center justify-center"
+    >
+      <IconDocument class="w-10 h-10"></IconDocument>
+    </div>
   </template>
 
   <div

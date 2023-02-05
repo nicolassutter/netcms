@@ -5,7 +5,8 @@ label {
 :is(
   input:not(:where([type="checkbox"], [type="radio"])),
   textarea,
-  select
+  select,
+  .ProseMirror
 ) {
   @apply rounded-md p-2 bg-base-100;
   @apply block w-full appearance-none;
@@ -34,8 +35,31 @@ label {
   }
 }
 
-textarea {
+textarea, .ProseMirror {
   @apply min-h-48;
+}
+
+.ProseMirror {
+
+  & h1, & h2, & h3, & h4 {
+    @apply font-bold text-[inherit];
+  }
+
+  & h1 {
+    @apply text-3xl;
+  }
+
+  & h2 {
+    @apply text-2xl;
+  }
+
+  & h3 {
+    @apply text-xl;
+  }
+
+  & h4 {
+    @apply text-lg
+  }
 }
 
 .form {

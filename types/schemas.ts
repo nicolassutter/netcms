@@ -39,7 +39,11 @@ export const CheckFieldSchema = z
 
 export const TextFieldSchema = z
   .object({
-    params: z.object({}).optional(),
+    params: z
+      .object({
+        long: z.boolean().default(false),
+      })
+      .optional(),
     default: z.string().default(''),
     type: z.literal('text' satisfies FieldType),
   })
